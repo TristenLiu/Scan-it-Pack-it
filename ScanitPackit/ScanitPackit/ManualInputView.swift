@@ -51,9 +51,7 @@ struct ManualInputView: View {
                             print(dimensionsList)
                         }
                         NavigationLink(destination: SchematicView()) {
-                            //let result = script.path
-                            //print(result)
-                        Text("Finish Adding")
+                            Text("Finish Adding")
                         }
                     }
                 }
