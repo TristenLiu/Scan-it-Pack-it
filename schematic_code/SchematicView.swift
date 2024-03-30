@@ -1,8 +1,8 @@
 //
 //  SchematicView.swift
-//  ManualInput
+//  testPackingData
 //
-//  Created by Daniellia Sumigar on 3/2/24.
+//  Created by Daniellia Sumigar on 3/23/24.
 //
 
 import SwiftUI
@@ -10,6 +10,11 @@ import SceneKit
 
 struct SchematicView: View {
     @ObservedObject var viewModel: ViewModel
+    @State private var currentIndex = 0
+    @State private var addedNodes = [SCNNode]()
+    
+    var scene = SCNScene()
+    
     
     var body: some View {
         VStack {
@@ -18,11 +23,44 @@ struct SchematicView: View {
                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2)
                     .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
                     .padding()
-                    } else {
-                        Text("Packing Data Not Available")
+                
+                
+                HStack {
+                    Button(action: {
+                        if currentIndex > 0 {
+                            currentIndex -= 1
+                            
+                            if addedNodes.isEmpty == false {
+                                addedNodes.last?.removeFromParentNode()
+                                addedNodes.removeLast()
+                            }
+                        }
+                    }) {
+                        Image(systemName: "arrow.backward")
                     }
+                    .disabled(currentIndex == 0)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        if currentIndex < viewModel.packing_data?.fitted_items.count ?? 0 {
+                            let boxNode = createBoxes(packingData: packingData, index: currentIndex)
+                            scene.rootNode.addChildNode(boxNode)
+                            
+                            currentIndex += 1
+                        }
+                    }) {
+                        Image(systemName:"arrow.forward")
+                    }
+                    .disabled(currentIndex == (viewModel.packing_data?.fitted_items.count ?? 0))
                 }
+                .padding()
+            } else {
+                Text("Packing Data Not Available")
+            }
+        }
     }
+    
     
     // CUSTOM Metal Shader - Generate the wireframe texture
         let sm = "float u = _surface.diffuseTexcoord.x; \n" +
@@ -47,7 +85,7 @@ struct SchematicView: View {
         UIColor.systemBlue,
         UIColor.systemOrange
     ]
-
+    
     
     func extractDimensionsAndConvert(from text: String) -> [CGFloat] {
         let pattern = "(\\d+)x(\\d+)x(\\d+)"
@@ -62,7 +100,7 @@ struct SchematicView: View {
                        let floatValue = Float(text[range]) {
                         dimensions.append(CGFloat(floatValue))
                     } else {
-                        dimensions.append(0) // Or any default value you prefer
+                        dimensions.append(0)
                     }
                 }
                 return dimensions
@@ -73,24 +111,15 @@ struct SchematicView: View {
         }
     }
     
-    
-    func createScene(packingData: PackingData) -> SCNScene {
-        let scene = SCNScene()
+    func parseData(packingData: PackingData) -> ([Fitted_Items], [UIColor], [[Float]], [[CGFloat]]) {
         let fittedItems = packingData.fitted_items
-        let unfittedItems = packingData.unfitted_items
-        let bin = extractDimensionsAndConvert(from: packingData.bin)
-        let spaceUtilization = packingData.space_utilization
-        let residualVolume = packingData.residual_volume
-        let unpackItemVolume = packingData.unpack_item_volume
-        let usedTime = packingData.used_time
         
-        let colors = packingData.fitted_items.indices.map { index in
+        let colors = fittedItems.indices.map { index in
             predefinedColors[index % predefinedColors.count]
         }
-
-        print(fittedItems)
-        let fittedItemsPositions = packingData.fitted_items.map { $0.position.compactMap { Float($0)  } }
-        let fittedItemsDimensions = packingData.fitted_items.map { fittedItem in
+        
+        let fittedItemsPositions = fittedItems.map { $0.position.compactMap { Float($0)  } }
+        let fittedItemsDimensions = fittedItems.map { fittedItem in
             fittedItem.dimensions.compactMap { dimensionString in
                 if let dimensionFloat = Float(dimensionString) {
                     return CGFloat(dimensionFloat)
@@ -99,54 +128,60 @@ struct SchematicView: View {
                 }
             }
         }
-        print(fittedItemsDimensions)
-        print(fittedItemsPositions)
-        let combinedNode = createBoxes(containerSize: bin, sizes: fittedItemsDimensions, positions: fittedItemsPositions, colors: colors)
-        scene.rootNode.addChildNode(combinedNode)
         
-        return scene
+        return (fittedItems, colors, fittedItemsPositions, fittedItemsDimensions)
+        
     }
     
-    func createBoxes(containerSize: [CGFloat], sizes: [[CGFloat]], positions: [[Float]], colors: [UIColor]) -> SCNNode {
+    func createScene(packingData: PackingData) -> SCNScene {
+        let bin = extractDimensionsAndConvert(from: packingData.bin)
+
         let parentNode = SCNNode()
+        //parentNode.name = "package"
         
-        let container = SCNBox(width: containerSize[0], height: containerSize[1], length: containerSize[2], chamferRadius: 0)
-        
+        let container = SCNBox(width: bin[0], height: bin[1], length: bin[2], chamferRadius: 0)
         container.firstMaterial?.diffuse.contents = UIColor.black
         container.firstMaterial?.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
         container.firstMaterial?.isDoubleSided = true
         
         let containerNode = SCNNode(geometry: container)
-        containerNode.position = SCNVector3(0 + Float(containerSize[0] / 2), 0 + Float(containerSize[1] / 2), 0 + Float(containerSize[2] / 2))
+        containerNode.position = SCNVector3(0 + Float(bin[0] / 2), 0 + Float(bin[1] / 2), 0 + Float(bin[2] / 2))
+        scene.rootNode.addChildNode(containerNode)
+        return scene
+    }       
+
+    func createBoxes(packingData: PackingData, index: Int) -> SCNNode {
+        let packing_data = parseData(packingData: packingData)
+        let size = packing_data.3[index]
+        let position = packing_data.2[index]
+        let color = packing_data.1[index]
         
-        parentNode.addChildNode(containerNode)
+        let parentNode = SCNNode()
+
+        let box = SCNBox(width: size[0], height: size[1], length: size[2], chamferRadius: 0.0)
+        let material = SCNMaterial()
+        material.diffuse.contents = color
+        material.transparency = 0.7
+        box.materials = [material]
         
-        for i in 0..<min(sizes.count, positions.count, colors.count) {
-            let size = sizes[i]
-            let position = positions[i]
-            let color = colors[i]
-            
-            // Create SCNBox
-            let box = SCNBox(width: size[0], height: size[1], length: size[2], chamferRadius: 0.0)
-            let material = SCNMaterial()
-            material.diffuse.contents = color
-            material.transparency = 0.7
-            box.materials = [material]
-            
-            // Create SCNNode with the box geometry
-            let boxNode = SCNNode(geometry: box)
-            
-            let fadeInAction = SCNAction.fadeIn(duration: 1)
-            let moveAction = SCNAction.move(to: SCNVector3(position[0] + Float(size[0] / 2), position[1] + Float(size[1] / 2), position[2] + Float(size[2] / 2)), duration: 0.5)
-            
-            let fadeInMoveSequence = SCNAction.sequence([SCNAction.wait(duration: Double(i) * 1.0), fadeInAction, moveAction])
-            
-            boxNode.runAction(fadeInMoveSequence)
-            
-            parentNode.addChildNode(boxNode)
-        }
+        let boxNode = SCNNode(geometry: box)
+        
+        let fadeInAction = SCNAction.fadeIn(duration: 1)
+        let moveAction = SCNAction.move(to: SCNVector3(position[0] + Float(size[0] / 2), position[1] + Float(size[1] / 2), position[2] + Float(size[2] / 2)), duration: 0.5)
+        
+        let fadeInMoveSequence = SCNAction.sequence([SCNAction.wait(duration: Double(index - currentIndex) * 1.0), fadeInAction, moveAction])
+        
+        boxNode.opacity = 0.0 // Initially hide new nodes
+        boxNode.runAction(fadeInMoveSequence)
+        
+        parentNode.addChildNode(boxNode)
+        
         
         return parentNode
     }
-
 }
+
+
+//#Preview {
+//    SchematicView()
+//}
