@@ -1,8 +1,8 @@
 //
 //  ViewModel.swift
-//  ScanitPackit
+//  testPackingData
 //
-//  Created by Daniellia Sumigar on 3/26/24.
+//  Created by Daniellia Sumigar on 3/23/24.
 //
 
 import Foundation
@@ -10,8 +10,8 @@ import Foundation
 class ViewModel: ObservableObject {
     @Published var packing_data: PackingData?
 
-    func fetch(completion: @escaping () -> Void) {
-        guard let url = URL(string: "http://127.0.0.1:5000") else {
+    func fetch() {
+        guard let url = URL(string: "https://scanit-packit-51bb1a0d2371.herokuapp.com/") else {
             return
         }
         
@@ -118,7 +118,7 @@ class ViewModel: ObservableObject {
                 let packing_data = try JSONDecoder().decode(PackingData.self, from: data)
                 DispatchQueue.main.async {
                     self?.packing_data = packing_data
-                    print(packing_data)
+                    //print(packing_data)
                 }
                 
             } catch {
@@ -128,7 +128,6 @@ class ViewModel: ObservableObject {
         
         // Start API call
         task.resume()
-        completion()
     }
 
 }
