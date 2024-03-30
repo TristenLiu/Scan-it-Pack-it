@@ -8,11 +8,13 @@
 
 import UIKit
 import ARKit
+import Combine
 
 class AreaViewController: MeasureViewController {
 
+    var sharedDims = Dimensions.shared
+    var cancellables: Set<AnyCancellable> = []
     var dimensions: [CGFloat] = [0, 0, 0]
-    var dataPoints: [[String]] = []
     
     enum MeasureState {
         case lengthCalc
@@ -31,46 +33,27 @@ class AreaViewController: MeasureViewController {
             return lengthNodes as! [Any] + breadthNodes + heightNodes
         }
     }
-    var nodeColor: UIColor {
-        get {
-            return nodeColor(forState: currentState, alphaComponent: 0.7)
-        }
-    }
+    var nodeColor = UIColor.white.withAlphaComponent(0.8)
     
     
     @IBOutlet weak var heightLabel: UILabel!
     @IBOutlet weak var breadthLabel: UILabel!
     @IBOutlet weak var lengthLabel: UILabel!
+    @IBOutlet weak var distanceLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.delegate = self
-        lengthLabel.textColor = nodeColor(forState: .lengthCalc, alphaComponent: 1)
-        breadthLabel.textColor = nodeColor(forState: .breadthCalc, alphaComponent: 1)
-        heightLabel.textColor = nodeColor(forState: .breadthCalc, alphaComponent: 1)
+        
+        sharedDims.$dimensions
+                .sink { [weak self] newDataPoints in
+                    // Handle the change in data points here
+                }
+                .store(in: &cancellables)
+
     }
     
     //MARK: - Private helper methods
-    private func updateDimensionLabels() {
-        // Assuming labels are named lengthLabel, breadthLabel, heightLabel
-        lengthLabel.text = "Length: \(dimensions[0])"
-        breadthLabel.text = "Breadth: \(dimensions[1])"
-        heightLabel.text = "Height: \(dimensions[2])"
-    }
-    
-    
-    private func nodeColor(forState state: MeasureState, alphaComponent: CGFloat) -> UIColor {
-        switch state {
-        case .lengthCalc:
-            return UIColor.red.withAlphaComponent(alphaComponent)
-        case .breadthCalc:
-            return UIColor.green.withAlphaComponent(alphaComponent)
-        case .heightCalc:
-            return UIColor.blue.withAlphaComponent(alphaComponent)
-        }
-    }
-    
-    
     private func nodesList(forState state: MeasureState) -> NSMutableArray {
         switch state {
         case .lengthCalc:
@@ -95,10 +78,21 @@ class AreaViewController: MeasureViewController {
         lengthLabel.text = "--"
         breadthLabel.text = "--"
         heightLabel.text = "--"
+        distanceLabel.text = "--"
     }
     
     
     //MARK: - IBActions
+    @IBAction func backButtonTapped(_ sender: UIButton) {
+        
+            if presentingViewController != nil {
+                dismiss(animated: true, completion: nil)
+            } else if let navigationController = navigationController {
+                navigationController.popViewController(animated: true)
+            } else {
+                fatalError("YourViewController is not inside a navigation controller.")
+            }
+        }
     
     @IBAction func addPoint(_ sender: UIButton) {
         
@@ -118,7 +112,7 @@ class AreaViewController: MeasureViewController {
         }
         let nodes = nodesList(forState: currentState)
         
-        let sphere = SCNSphere(color: nodeColor, radius: nodeRadius)
+        let sphere = SCNSphere(color: UIColor.white.withAlphaComponent(1), radius: nodeRadius)
         let node = SCNNode(geometry: sphere)
         node.position = hitResultPosition
         sceneView.scene.rootNode.addChildNode(node)
@@ -144,7 +138,7 @@ class AreaViewController: MeasureViewController {
             // Create a node line between the nodes
             let measureLine = LineNode(from: startNode.position,
                                        to: endNode.position,
-                                       lineColor: nodeColor,
+                                       lineColor: UIColor.white.withAlphaComponent(1),
                                        lineWidth: lineWidth)
             sceneView.scene.rootNode.addChildNode(measureLine)
             lineNodes.add(measureLine)
@@ -161,19 +155,22 @@ class AreaViewController: MeasureViewController {
             case .lengthCalc:
                 dimensions = [distance, 0, 0]
                 lengthLabel.text = String(format: "%.2fm", distance)
+                distanceLabel.text = "--"
                 currentState = .breadthCalc
             case .breadthCalc:
                 dimensions[1] = distance
                 breadthLabel.text = String(format: "%.2fm", distance)
+                distanceLabel.text = "--"
                 currentState = .heightCalc
             case .heightCalc:
                 dimensions[2] = distance
                 heightLabel.text = String(format: "%.2fm", distance)
+                distanceLabel.text = "--"
                 
-                dataPoints.append([String(format: "%.2f", dimensions[0]),
+                sharedDims.dimensions.append([String(format: "%.2f", dimensions[0]),
                                     String(format: "%.2f", dimensions[1]),
                                     String(format: "%.2f", dimensions[2])])
-                print(dataPoints)
+                print(sharedDims.dimensions)
             }
         }
     }
@@ -195,10 +192,20 @@ extension AreaViewController: ARSCNViewDelegate {
             realTimeLineNode.updateNode(vectorA: startNode.position, vectorB: hitResultPosition, color: nil)
             
             let distance = sceneView.distance(betweenPoints: startNode.position, point2: hitResultPosition)
-            let label = currentState == .lengthCalc ? lengthLabel : breadthLabel
+            let label: UILabel
+            let dlabel: UILabel
+            switch currentState {
+            case .lengthCalc:
+                label = lengthLabel
+            case .breadthCalc:
+                label = breadthLabel
+            case .heightCalc:
+                label = heightLabel
+            }
+            dlabel = distanceLabel
             DispatchQueue.main.async { [unowned self] in
-                label?.text = String(format: "%.2fm", distance)
-                label?.textColor = self.nodeColor
+                label.text = String(format: "%.2fm", distance)
+                dlabel.text = String(format: "%.2fm", distance)
             }
         }
     }

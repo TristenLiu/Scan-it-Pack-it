@@ -94,17 +94,17 @@
                                                 <rect key="frame" x="262" y="0.0" width="131" height="50"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uxF-S4-LZ8">
-                                                        <rect key="frame" x="46" y="0.0" width="39.333333333333343" height="50"/>
+                                                        <rect key="frame" x="49.333333333333314" y="0.0" width="32.333333333333343" height="50"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="H:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O9O-vB-QWA" userLabel="Height :">
-                                                                <rect key="frame" x="0.0" y="0.0" width="21" height="50"/>
-                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="17" height="50"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FxT-Tb-HwJ">
-                                                                <rect key="frame" x="21" y="0.0" width="18.333333333333329" height="50"/>
-                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                                                <rect key="frame" x="17" y="0.0" width="15.333333333333336" height="50"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
@@ -130,6 +130,22 @@
                                     <constraint firstAttribute="bottom" secondItem="hZ0-68-n0h" secondAttribute="bottom" id="s7q-zu-2Lv"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GmK-T9-c3n">
+                                <rect key="frame" x="188" y="440" width="16" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QY7-kQ-Ubx">
+                                <rect key="frame" x="15" y="16" width="78" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="chevron.left" catalog="system" title="Back"/>
+                                <connections>
+                                    <action selector="backButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kPA-aA-hfx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -150,6 +166,7 @@
                     <connections>
                         <outlet property="breadthLabel" destination="2yZ-Kq-lSh" id="anC-Oq-3v4"/>
                         <outlet property="centerPointImageView" destination="XGF-iL-UJI" id="uH1-hq-f4u"/>
+                        <outlet property="distanceLabel" destination="GmK-T9-c3n" id="L2M-3N-O4P"/>
                         <outlet property="heightLabel" destination="FxT-Tb-HwJ" id="aWY-Id-EOi"/>
                         <outlet property="lengthLabel" destination="oaM-8G-aF6" id="4xT-7O-eHW"/>
                         <outlet property="sceneView" destination="v6C-CY-qGq" id="Xvq-gK-YxM"/>
@@ -157,7 +174,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="19.921875" y="23.4375"/>
+            <point key="canvasLocation" x="19.083969465648853" y="23.239436619718312"/>
         </scene>
         <!--Distance Measure View Controller-->
         <scene sceneID="a6t-y4-Zi6">
@@ -257,5 +274,6 @@
     <resources>
         <image name="Oval" width="12" height="12"/>
         <image name="add_point" width="72.666664123535156" height="73.666664123535156"/>
+        <image name="chevron.left" catalog="system" width="97" height="128"/>
     </resources>
 </document>

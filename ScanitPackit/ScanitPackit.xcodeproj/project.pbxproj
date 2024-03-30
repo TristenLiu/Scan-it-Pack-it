@@ -22,6 +22,7 @@
 		B0A960B62BB273F200305EC9 /* AreaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A960B02BB273F200305EC9 /* AreaViewController.swift */; };
 		B0A960B72BB273F200305EC9 /* LineNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A960B12BB273F200305EC9 /* LineNode.swift */; };
 		B0A960B82BB273F200305EC9 /* MeasureSCNView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A960B22BB273F200305EC9 /* MeasureSCNView.swift */; };
+		B0A960F92BB78BD400305EC9 /* Dimensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A960F82BB78BD400305EC9 /* Dimensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		B0A960B12BB273F200305EC9 /* LineNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineNode.swift; sourceTree = "<group>"; };
 		B0A960B22BB273F200305EC9 /* MeasureSCNView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureSCNView.swift; sourceTree = "<group>"; };
 		B0A960F12BB27CF000305EC9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B0A960F82BB78BD400305EC9 /* Dimensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dimensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 				B0A960822BB26AC900305EC9 /* Assets.xcassets */,
 				B0A960842BB26AC900305EC9 /* Preview Content */,
 				B0A960AA2BB26C5C00305EC9 /* SchematicView.swift */,
+				B0A960F82BB78BD400305EC9 /* Dimensions.swift */,
 			);
 			path = ScanitPackit;
 			sourceTree = "<group>";
@@ -298,6 +301,7 @@
 				B0A960B42BB273F200305EC9 /* SCNSphere+Init.swift in Sources */,
 				B0A960B62BB273F200305EC9 /* AreaViewController.swift in Sources */,
 				B0A960B82BB273F200305EC9 /* MeasureSCNView.swift in Sources */,
+				B0A960F92BB78BD400305EC9 /* Dimensions.swift in Sources */,
 				B0A960B32BB273F200305EC9 /* MeasureViewController.swift in Sources */,
 				B0A9607F2BB26AC800305EC9 /* ScanitPackitApp.swift in Sources */,
 				B0A960B72BB273F200305EC9 /* LineNode.swift in Sources */,
@@ -474,6 +478,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -505,6 +510,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
