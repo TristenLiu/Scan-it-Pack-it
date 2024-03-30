@@ -44,13 +44,7 @@ class AreaViewController: MeasureViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.delegate = self
-        
-        sharedDims.$dimensions
-                .sink { [weak self] newDataPoints in
-                    // Handle the change in data points here
-                }
-                .store(in: &cancellables)
-
+        self.edgesForExtendedLayout = [.top, .bottom]
     }
     
     //MARK: - Private helper methods
@@ -72,27 +66,16 @@ class AreaViewController: MeasureViewController {
         removeNodes(fromNodeList: lineNodes)
     }
     
-    private func resetMeasurement() {
+    //MARK: - IBActions
+    @IBAction func resetMeasurement() {
         clearScene()
+        removeNodes(fromNodeList: lineNodes)
         currentState = .lengthCalc
         lengthLabel.text = "--"
         breadthLabel.text = "--"
         heightLabel.text = "--"
         distanceLabel.text = "--"
     }
-    
-    
-    //MARK: - IBActions
-    @IBAction func backButtonTapped(_ sender: UIButton) {
-        
-            if presentingViewController != nil {
-                dismiss(animated: true, completion: nil)
-            } else if let navigationController = navigationController {
-                navigationController.popViewController(animated: true)
-            } else {
-                fatalError("YourViewController is not inside a navigation controller.")
-            }
-        }
     
     @IBAction func addPoint(_ sender: UIButton) {
         
@@ -167,9 +150,9 @@ class AreaViewController: MeasureViewController {
                 heightLabel.text = String(format: "%.2fm", distance)
                 distanceLabel.text = "--"
                 
-                sharedDims.dimensions.append([String(format: "%.2f", dimensions[0]),
-                                    String(format: "%.2f", dimensions[1]),
-                                    String(format: "%.2f", dimensions[2])])
+                sharedDims.dimensions.append([String(format: "%.3f", dimensions[0]),
+                                    String(format: "%.3f", dimensions[1]),
+                                    String(format: "%.3f", dimensions[2])])
                 print(sharedDims.dimensions)
             }
         }

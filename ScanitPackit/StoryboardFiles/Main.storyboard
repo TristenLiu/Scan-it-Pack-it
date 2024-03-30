@@ -11,7 +11,7 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="AreaView" id="BYZ-38-t0r" customClass="AreaViewController" customModule="ScanitPackit" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -121,7 +121,7 @@
                                         </subviews>
                                     </stackView>
                                 </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.3966181506849315" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="hZ0-68-n0h" firstAttribute="leading" secondItem="8yj-RP-FXT" secondAttribute="leading" id="UlM-TO-Xr8"/>
                                     <constraint firstItem="hZ0-68-n0h" firstAttribute="top" secondItem="8yj-RP-FXT" secondAttribute="top" id="bJj-oe-TJo"/>
@@ -137,13 +137,13 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QY7-kQ-Ubx">
-                                <rect key="frame" x="15" y="16" width="78" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Fv-ip-CPX">
+                                <rect key="frame" x="36.666666666666664" y="694.66666666666663" width="67.333333333333343" height="34.333333333333371"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="chevron.left" catalog="system" title="Back"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="Reset"/>
                                 <connections>
-                                    <action selector="backButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kPA-aA-hfx"/>
+                                    <action selector="resetMeasurement" destination="BYZ-38-t0r" eventType="touchUpInside" id="qcx-dc-ENp"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -152,15 +152,17 @@
                         <constraints>
                             <constraint firstItem="XGF-iL-UJI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="0y0-cs-jfz"/>
                             <constraint firstItem="8yj-RP-FXT" firstAttribute="top" secondItem="kIs-d4-1Oh" secondAttribute="bottom" constant="20" id="45U-LP-u40"/>
-                            <constraint firstItem="v6C-CY-qGq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="94O-9t-k5F"/>
+                            <constraint firstItem="v6C-CY-qGq" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="94O-9t-k5F"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="v6C-CY-qGq" secondAttribute="trailing" id="GvB-WW-wLl"/>
                             <constraint firstItem="v6C-CY-qGq" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="TRD-AT-gyI"/>
                             <constraint firstItem="kIs-d4-1Oh" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Wyo-de-J8q"/>
-                            <constraint firstItem="8yj-RP-FXT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="XVy-VN-dzg"/>
+                            <constraint firstItem="8yj-RP-FXT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="XVy-VN-dzg"/>
+                            <constraint firstItem="kIs-d4-1Oh" firstAttribute="leading" secondItem="5Fv-ip-CPX" secondAttribute="trailing" constant="56.329999999999998" id="XcW-r3-z8q"/>
                             <constraint firstItem="XGF-iL-UJI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bYY-QZ-hMB"/>
-                            <constraint firstItem="8yj-RP-FXT" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="gKd-e2-TYb"/>
+                            <constraint firstItem="8yj-RP-FXT" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" constant="-34" id="gKd-e2-TYb"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8yj-RP-FXT" secondAttribute="trailing" id="iVZ-cV-hmy"/>
                             <constraint firstAttribute="bottom" secondItem="v6C-CY-qGq" secondAttribute="bottom" id="pee-A3-Acu"/>
+                            <constraint firstItem="8yj-RP-FXT" firstAttribute="top" secondItem="5Fv-ip-CPX" secondAttribute="bottom" constant="39" id="wfg-Iv-wnQ"/>
                         </constraints>
                     </view>
                     <connections>
@@ -274,6 +276,5 @@
     <resources>
         <image name="Oval" width="12" height="12"/>
         <image name="add_point" width="72.666664123535156" height="73.666664123535156"/>
-        <image name="chevron.left" catalog="system" width="97" height="128"/>
     </resources>
 </document>

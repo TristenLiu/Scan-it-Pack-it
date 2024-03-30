@@ -9,10 +9,9 @@ import SwiftUI
 import UIKit
 
 struct ContentView: View {
-    @State private var scanScreen = false
+    
     @State private var manualScreen = false
     @ObservedObject var sharedDims = Dimensions.shared
-
     
     var body: some View {
         NavigationView {
@@ -22,31 +21,20 @@ struct ContentView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding()
                 
-//                NavigationLink(destination: storyboardView()) {
-//                                    HStack {
-//                                        Image(systemName: "camera")
-//                                        Text("New Scan")
-//                                    }
-//                                }
-                Button(action: {
-                    scanScreen = true
-                }) {
+                NavigationLink(destination: storyboardView().edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
                     HStack {
                         Image(systemName: "camera")
                         Text("New Scan")
                     }
                 }
-                .fullScreenCover(isPresented: $scanScreen, content: {
-                    storyboardView()
-                })
                 
                 Button("Manual Input") {
                     manualScreen = true
                 }
                 .fullScreenCover(isPresented: $manualScreen, content: {
                     ManualInputView(dimensionsList: sharedDims)
+                        .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
                 })
-                
             }
         }
     }

@@ -27,6 +27,13 @@ struct ManualInputView: View {
                         }}
                     .padding()
                     Spacer()
+                    
+                    NavigationLink(destination: storyboardView().edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
+                        HStack {
+                            Text("Scan")
+                        }
+                    }
+                    .padding()
                 }
                 Text("Manual Input Mode")
                     .font(.title)
