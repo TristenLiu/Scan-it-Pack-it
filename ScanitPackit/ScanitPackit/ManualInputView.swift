@@ -88,6 +88,7 @@ struct ManualInputView: View {
                         Text("Finish Adding")
                     }
                 }
+                .scrollDismissesKeyboard(.immediately)
                 .sheet(isPresented: $showingContainerSelection) {
                     ContainerSelectionView(selectContainer: { container in
                         dimensionsList.dimensions[0] = container.dimensions.map { dimension in
