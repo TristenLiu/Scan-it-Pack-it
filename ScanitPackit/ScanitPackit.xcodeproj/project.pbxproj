@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B05A88D92BB8FD1200A09280 /* ContainerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05A88D82BB8FD1200A09280 /* ContainerSelectionView.swift */; };
 		B0A9607F2BB26AC800305EC9 /* ScanitPackitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A9607E2BB26AC800305EC9 /* ScanitPackitApp.swift */; };
 		B0A960812BB26AC800305EC9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A960802BB26AC800305EC9 /* ContentView.swift */; };
 		B0A960832BB26AC900305EC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0A960822BB26AC900305EC9 /* Assets.xcassets */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B05A88D82BB8FD1200A09280 /* ContainerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerSelectionView.swift; sourceTree = "<group>"; };
 		B0A9607B2BB26AC800305EC9 /* ScanitPackit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScanitPackit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0A9607E2BB26AC800305EC9 /* ScanitPackitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanitPackitApp.swift; sourceTree = "<group>"; };
 		B0A960802BB26AC800305EC9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				B0A960AA2BB26C5C00305EC9 /* SchematicView.swift */,
 				B0A960F82BB78BD400305EC9 /* Dimensions.swift */,
 				B0A960FA2BB7C75E00305EC9 /* ViewState.swift */,
+				B05A88D82BB8FD1200A09280 /* ContainerSelectionView.swift */,
 			);
 			path = ScanitPackit;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				B0A960B32BB273F200305EC9 /* MeasureViewController.swift in Sources */,
 				B0A9607F2BB26AC800305EC9 /* ScanitPackitApp.swift in Sources */,
 				B0A960B72BB273F200305EC9 /* LineNode.swift in Sources */,
+				B05A88D92BB8FD1200A09280 /* ContainerSelectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,4 +12,8 @@ class Dimensions: ObservableObject {
     static let shared = Dimensions()
     
     @Published var dimensions: [[String]] = []
+    
+    func removeDimensions(at index: Int) {
+            dimensions.remove(at: index)
+        }
 }

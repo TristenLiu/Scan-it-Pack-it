@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 import ARKit
 import Combine
 
@@ -15,6 +16,9 @@ class AreaViewController: MeasureViewController {
     var sharedDims = Dimensions.shared
     var cancellables: Set<AnyCancellable> = []
     var dimensions: [CGFloat] = [0, 0, 0]
+    
+    let manualView = UIHostingController(rootView: ManualInputView(dimensionsList: Dimensions.shared))
+    @IBOutlet weak var container: UIView!
     
     enum MeasureState {
         case lengthCalc
@@ -68,6 +72,7 @@ class AreaViewController: MeasureViewController {
     
     //MARK: - IBActions
     @IBAction func resetMeasurement() {
+        print("reset button pressed")
         clearScene()
         removeNodes(fromNodeList: lineNodes)
         currentState = .lengthCalc
@@ -75,6 +80,11 @@ class AreaViewController: MeasureViewController {
         breadthLabel.text = "--"
         heightLabel.text = "--"
         distanceLabel.text = "--"
+    }
+    
+    @IBAction func switchScreen() {
+        print("SwitchScreen Button Pressed")
+        self.navigationController?.pushViewController(manualView, animated: true)
     }
     
     @IBAction func addPoint(_ sender: UIButton) {
