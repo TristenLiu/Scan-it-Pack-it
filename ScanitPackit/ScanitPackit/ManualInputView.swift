@@ -13,21 +13,22 @@ struct ManualInputView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var dimensionsList: Dimensions
     @State private var showingContainerSelection = false
+    @StateObject var viewModel = ViewModel()
 
     
     var body: some View {
-        NavigationStack {
+        //NavigationStack {
             VStack {
                 HStack {
-                    Button(action: {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }) {
-                        HStack {
-                            Image(systemName: "chevron.left")
-                            Text("Back")
-                        }}
-                    .padding()
-                    Spacer()
+//                    Button(action: {
+//                        self.presentationMode.wrappedValue.dismiss()
+//                    }) {
+//                        HStack {
+//                            Image(systemName: "chevron.left")
+//                            Text("Back")
+//                        }}
+//                    .padding()
+                    //Spacer()
                     
                     NavigationLink(destination: storyboardView().edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
                         HStack {
@@ -40,6 +41,12 @@ struct ManualInputView: View {
                     .font(.title)
                     .frame(alignment: .top)
                     .foregroundColor(Color.black)
+                    .padding()
+                
+                Button("Fetch Data (demo)") {
+                    viewModel.fetch()
+                }
+                
                 List {
                     ForEach(0..<dimensionsList.dimensions.count, id: \.self) { index in
                         Section(header: HStack {
@@ -77,7 +84,7 @@ struct ManualInputView: View {
                         print(dimensionsList.dimensions)
                     }
                     
-                    NavigationLink(destination: SchematicView()) {
+                    NavigationLink(destination: SchematicView(viewModel: viewModel)) {
                         Text("Finish Adding")
                     }
                 }
@@ -88,7 +95,7 @@ struct ManualInputView: View {
                                 let cmValue = inchValue * 2.54
                                 return String(format: "%.2f", cmValue)
                             } else {
-                                return dimension 
+                                return dimension
                             }
                         }
                         showingContainerSelection = false
@@ -97,7 +104,7 @@ struct ManualInputView: View {
                 
             }
             .padding()
-        }
+        //}
     }
 }
 

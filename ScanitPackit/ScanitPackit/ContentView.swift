@@ -12,30 +12,12 @@ struct ContentView: View {
     
     @State private var manualScreen = false
     @ObservedObject var sharedDims = Dimensions.shared
+    @State var selectedTab: Tabs = .saved
     
     var body: some View {
-        NavigationView {
-            VStack {
-                Image("scan-it-pack-it-2")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding()
-                
-                NavigationLink(destination: storyboardView().edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
-                    HStack {
-                        Image(systemName: "camera")
-                        Text("New Scan")
-                    }
-                }
-                
-                Button("Manual Input") {
-                    manualScreen = true
-                }
-                .fullScreenCover(isPresented: $manualScreen, content: {
-                    ManualInputView(dimensionsList: sharedDims)
-                        .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-                })
-            }
+        VStack {
+            
+            TabBarView(selectedTab: $selectedTab)
         }
     }
 }

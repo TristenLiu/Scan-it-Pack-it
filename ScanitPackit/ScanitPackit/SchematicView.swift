@@ -1,257 +1,213 @@
 //
 //  SchematicView.swift
-//  ManualInput
+//  ScanitPackit
 //
-//  Created by Daniellia Sumigar on 3/2/24.
+//  Created by Daniellia Sumigar on 3/23/24.
 //
 
 import SwiftUI
 import SceneKit
 
-struct PackingData: Hashable, Decodable {
-    let bin: String
-    let fitted_items: [Fitted_Items]
-    let residual_volume: Double
-    let space_utilization: String
-    let unfitted_items: [Unfitted_Items]
-    let unpack_item_volume: Double
-    let used_time: Double
-}
-
-struct Fitted_Items: Hashable, Decodable {
-    let dimensions: [String]
-    let partno: String
-    let position: [String]
-    let rotation_type: Int
-    let volume: String
-    let weight: String
-}
-
-struct Unfitted_Items: Hashable, Decodable {
-    let dimensions: [String]
-    let partno: String
-    let volume: String
-    let weight: String
-}
-
-class ViewModel: ObservableObject {
-
-    func fetch() {
-        guard let url = URL(string: "http://127.0.0.1:5000") else {
-            return
-        }
-        
-        // Sample input JSON
-        let jsonData = """
-            {
-                "bin_dimensions": {
-                    "width": 10,
-                    "height": 10,
-                    "depth": 10
-                },
-                "items": [
-                    {
-                        "partno": "1",
-                        "name": "Item 1",
-                        "typeof": "cube",
-                        "width": 3,
-                        "height": 3,
-                        "depth": 3,
-                        "weight": 1,
-                        "level": 1,
-                        "loadbear": 100,
-                        "updown": true
-                    },
-                    {
-                        "partno": "2",
-                        "name": "Item 2",
-                        "typeof": "cube",
-                        "width": 2,
-                        "height": 2,
-                        "depth": 2,
-                        "weight": 1,
-                        "level": 1,
-                        "loadbear": 100,
-                        "updown": true
-                    },
-                    {
-                        "partno": "3",
-                        "name": "Item 3",
-                        "typeof": "cube",
-                        "width": 4,
-                        "height": 4,
-                        "depth": 4,
-                        "weight": 1,
-                        "level": 1,
-                        "loadbear": 100,
-                        "updown": true
-                    },
-                    {
-                        "partno": "4",
-                        "name": "Item 4",
-                        "typeof": "cube",
-                        "width": 10,
-                        "height": 5,
-                        "depth": 8,
-                        "weight": 1,
-                        "level": 1,
-                        "loadbear": 100,
-                        "updown": true
-                    },
-                    {
-                        "partno": "5",
-                        "name": "Item 5",
-                        "typeof": "cube",
-                        "width": 6,
-                        "height": 6,
-                        "depth": 6,
-                        "weight": 1,
-                        "level": 1,
-                        "loadbear": 100,
-                        "updown": true
-                    }
-                ]
-            }
-
-            """.data(using: .utf8)
-    
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = jsonData
-        
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data = data, error == nil else {
-                print(error?.localizedDescription ?? "Unknown error")
-                return
-            }
-            
-            do {
-                let packing_data = try JSONDecoder().decode(PackingData.self, from: data)
-                DispatchQueue.main.async {
-                    print(packing_data)
-                }
-            } catch {
-                print("Failed to decode JSON:", error)
-            }
-        }
-        
-        task.resume()
-    }
-}
-
 struct SchematicView: View {
+    @ObservedObject var viewModel: ViewModel
+    @State private var currentIndex = 0
+    @State private var addedNodes = [SCNNode]()
+    @State private var boxName: String?
+    
+    var scene = SCNScene()
     
     var body: some View {
-        VStack {
-            SceneView(scene: createScene(), options: [.autoenablesDefaultLighting, .allowsCameraControl])
-                .frame(width: UIScreen.main.bounds.width,
-                       height: UIScreen.main.bounds.height / 2)
-            .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height/2)
-                .padding(0.0)
+        ZStack(alignment: .topLeading) {
             
+            VStack {
+                
+                if let packingData = viewModel.packing_data {
+                    SceneView(scene: createScene(packingData: packingData), options: [.autoenablesDefaultLighting, .allowsCameraControl])
+                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2, alignment: .center)
+                        //.position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+                        .padding()
+                                     
+                    HStack {
+                        Button(action: {
+                            if currentIndex > 0 {
+                                currentIndex -= 1
+                                
+                                if addedNodes.isEmpty == false {
+                                    addedNodes.last?.removeFromParentNode()
+                                    addedNodes.removeLast()
+                                }
+                                
+                            }
+                        }) {
+                            Image(systemName: "arrow.backward")
+                        }
+                        .disabled(currentIndex == 0)
+                        
+                        
+                        VStack {
+                            if currentIndex == 0 {
+                                Text("Begin Packing Tutorial")
+                            } else {
+                                if let boxName = boxName { // Use boxNodeName if it's not nil
+                                    Text("Item: \(boxName)")
+                                        .foregroundColor(.primary)
+                                        .padding(.all)
+                                }
+                               
+                            }
+                        }
+                        
+                        Button(action: {
+                            if currentIndex < viewModel.packing_data?.fitted_items.count ?? 0 {
+                                let boxNode = createBoxes(packingData: packingData, index: currentIndex)
+                                scene.rootNode.addChildNode(boxNode)
+                                addedNodes.append(boxNode)
+                                boxName = boxNode.childNodes.first?.name
+                                currentIndex += 1
+                            }
+                        }) {
+                            Image(systemName:"arrow.forward")
+                        }
+                        .disabled(currentIndex == (viewModel.packing_data?.fitted_items.count ?? 0))
+                    }
+                    .padding()
+                } else {
+                    Text("Packing Data Not Available")
+                }
+            }
+            
+        }
+        
+    }
+    
+    
+    // CUSTOM Metal Shader - Generate the wireframe texture
+        let sm = "float u = _surface.diffuseTexcoord.x; \n" +
+        "float v = _surface.diffuseTexcoord.y; \n" +
+        "int u100 = int(u * 100); \n" +
+        "int v100 = int(v * 100); \n" +
+        "if (u100 % 99 == 0 || v100 % 99 == 0) { \n" +
+        "  // do nothing \n" +
+        "} else { \n" +
+        "    discard_fragment(); \n" +
+        "} \n"
+
+    let predefinedColors: [UIColor] = [
+        UIColor.systemYellow,
+        UIColor.systemPink,
+        UIColor.systemBrown,
+        UIColor.systemCyan,
+        UIColor.systemPurple,
+        UIColor.systemMint,
+        UIColor.systemTeal,
+        UIColor.systemRed,
+        UIColor.systemBlue,
+        UIColor.systemOrange
+    ]
+    
+    func extractDimensionsAndConvert(from text: String) -> [CGFloat] {
+        let pattern = "(\\d+)x(\\d+)x(\\d+)"
+        do {
+            let regex = try NSRegularExpression(pattern: pattern)
+            let results = regex.matches(in: text,
+                                        range: NSRange(text.startIndex..., in: text))
+            return results.flatMap { result -> [CGFloat] in
+                var dimensions = [CGFloat]()
+                for i in 1..<result.numberOfRanges {
+                    if let range = Range(result.range(at: i), in: text),
+                       let floatValue = Float(text[range]) {
+                        dimensions.append(CGFloat(floatValue))
+                    } else {
+                        dimensions.append(0)
+                    }
+                }
+                return dimensions
+            }
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
         }
     }
     
-}
-
-// Manually define input data:
-var containerSize1: (width: CGFloat, height: CGFloat, length: CGFloat) = (20, 20, 20)
-
-var sizes_1: [(width: CGFloat, height: CGFloat, length: CGFloat)] = [
-    (10, 15, 20),
-    (10, 20, 10),
-    (10, 5, 5),
-    (10, 20, 10),
-    (10, 5, 15)
-]
-
-var positions: [(x: Float, y: Float, z: Float)] = [
-    (0, 0, 0),
-    (10, 0, 0),
-    (0, 15, 15),
-    (10, 0, 10),
-    (0, 15, 0)
-]
-
-var colors: [UIColor] = [
-    (UIColor.systemYellow),
-    (UIColor.systemPink),
-    (UIColor.systemBrown),
-    (UIColor.systemCyan),
-    (UIColor.systemPurple)
-]
-
-func createScene() -> SCNScene {
-    // Creating the schematic:
-    let scene = SCNScene()
-    
-    let combinedNode = createAndAddBoxes(containerSize: containerSize1, sizes: sizes_1, positions: positions, colors: colors)
-    scene.rootNode.addChildNode(combinedNode)
-
-    
-    return scene
-}
-
-// CUSTOM Metal Shader - Generate the wireframe texture
-    let sm = "float u = _surface.diffuseTexcoord.x; \n" +
-    "float v = _surface.diffuseTexcoord.y; \n" +
-    "int u100 = int(u * 100); \n" +
-    "int v100 = int(v * 100); \n" +
-    "if (u100 % 99 == 0 || v100 % 99 == 0) { \n" +
-    "  // do nothing \n" +
-    "} else { \n" +
-    "    discard_fragment(); \n" +
-    "} \n"
-
-func createAndAddBoxes(containerSize: (width: CGFloat, height: CGFloat, length: CGFloat), sizes: [(width: CGFloat, height: CGFloat, length: CGFloat)], positions: [(x: Float, y: Float, z: Float)], colors: [UIColor]) -> SCNNode {
-    let parentNode = SCNNode()
-    
-    let container = SCNBox(width: containerSize.width, height: containerSize.height, length: containerSize.length, chamferRadius: 0)
-    
-    container.firstMaterial?.diffuse.contents = UIColor.black
- 
-    container.firstMaterial?.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
-    container.firstMaterial?.isDoubleSided = true
-    let containerNode = SCNNode(geometry: container)
-    
-    containerNode.position = SCNVector3(0 + Float(containerSize.width / 2), 0 + Float(containerSize.height / 2), 0 + Float(containerSize.length / 2))
-    
-    parentNode.addChildNode(containerNode)
+    func parseData(packingData: PackingData) -> ([Fitted_Items], [String], [UIColor], [[Float]], [[CGFloat]], [String]) {
+        let fittedItems = packingData.fitted_items
+        let colors = fittedItems.indices.map { index in
+            predefinedColors[index % predefinedColors.count]
+        }
+        let unfittedItemsNames = packingData.unfitted_items.map { $0.partno }
         
-    for i in 0..<min(sizes.count, positions.count, colors.count) {
-        let size = sizes[i]
-        let position = positions[i]
-        let color = colors[i]
+        let fittedItemsPositions = fittedItems.map { $0.position.compactMap { Float($0)  } }
+        let fittedItemsDimensions = fittedItems.map { fittedItem in
+            fittedItem.dimensions.compactMap { dimensionString in
+                if let dimensionFloat = Float(dimensionString) {
+                    return CGFloat(dimensionFloat)
+                } else {
+                    return nil
+                }
+            }
+        }
         
-        // Create SCNBox
-        let box = SCNBox(width: size.width, height: size.height, length: size.length, chamferRadius: 0.0)
+        let fittedItemsNames = fittedItems.map { $0.partno }
+        
+        return (fittedItems, unfittedItemsNames, colors, fittedItemsPositions, fittedItemsDimensions, fittedItemsNames)
+        
+    }
+    
+
+    func createScene(packingData: PackingData) -> SCNScene {
+        let bin = extractDimensionsAndConvert(from: packingData.bin)
+
+        let container = SCNBox(width: bin[0], height: bin[1], length: bin[2], chamferRadius: 0)
+        container.firstMaterial?.diffuse.contents = UIColor.black
+        container.firstMaterial?.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
+        container.firstMaterial?.isDoubleSided = true
+        
+        let containerNode = SCNNode(geometry: container)
+        containerNode.position = SCNVector3(0 + Float(bin[0] / 2), 0 + Float(bin[1] / 2), 0 + Float(bin[2] / 2))
+        scene.rootNode.addChildNode(containerNode)
+        
+        let cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        
+        cameraNode.position = SCNVector3(x: 10, y: 10, z: 50)
+        scene.rootNode.addChildNode(cameraNode)
+        return scene
+    }
+
+    func createBoxes(packingData: PackingData, index: Int) -> SCNNode {
+        let packing_data = parseData(packingData: packingData)
+        let size = packing_data.4[index]
+        let position = packing_data.3[index]
+        let color = packing_data.2[index]
+        let name = packing_data.5[index]
+        
+        let parentNode = SCNNode()
+
+        let box = SCNBox(width: size[0], height: size[1], length: size[2], chamferRadius: 0.0)
         let material = SCNMaterial()
         material.diffuse.contents = color
         material.transparency = 0.7
         box.materials = [material]
         
-        // Create SCNNode with the box geometry
         let boxNode = SCNNode(geometry: box)
-
-        let fadeInAction = SCNAction.fadeIn(duration: 1)
-        let moveAction = SCNAction.move(to: SCNVector3(position.x + Float(size.width / 2), position.y + Float(size.height / 2), position.z + Float(size.length / 2)), duration: 0.5)
+        boxNode.name = name
         
-
-        let fadeInMoveSequence = SCNAction.sequence([SCNAction.wait(duration: Double(i) * 1.0), fadeInAction, moveAction])
-                
+        let fadeInAction = SCNAction.fadeIn(duration: 1)
+        let moveAction = SCNAction.move(to: SCNVector3(position[0] + Float(size[0] / 2), position[1] + Float(size[1] / 2), position[2] + Float(size[2] / 2)), duration: 0.5)
+        
+        let fadeInMoveSequence = SCNAction.sequence([SCNAction.wait(duration: Double(index - currentIndex) * 1.0), fadeInAction, moveAction])
+        
+        boxNode.opacity = 0.0 // Initially hide new nodes
         boxNode.runAction(fadeInMoveSequence)
-
+        
         parentNode.addChildNode(boxNode)
-                
-        }
-            
-    return parentNode
+        
+        
+        return parentNode
+    }
 }
 
 
-#Preview {
-    SchematicView()
-}
+//#Preview {
+//    SchematicView()
+//}
