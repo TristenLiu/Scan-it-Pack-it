@@ -130,13 +130,6 @@
                                     <constraint firstAttribute="bottom" secondItem="hZ0-68-n0h" secondAttribute="bottom" id="s7q-zu-2Lv"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GmK-T9-c3n">
-                                <rect key="frame" x="188" y="440" width="16" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Fv-ip-CPX">
                                 <rect key="frame" x="36.666666666666664" y="694.66666666666663" width="67.333333333333343" height="34.333333333333371"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -146,15 +139,13 @@
                                     <action selector="resetMeasurement" destination="BYZ-38-t0r" eventType="touchUpInside" id="qcx-dc-ENp"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HLV-nD-qfO">
-                                <rect key="frame" x="293" y="59" width="93" height="35"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="plg-F7-BBN">
+                                <rect key="frame" x="175" y="440" width="42" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="chevron.right" catalog="system" imagePlacement="trailing" title="Modify"/>
-                                <connections>
-                                    <action selector="switchScreen" destination="BYZ-38-t0r" eventType="touchUpInside" id="RX3-Sf-yam"/>
-                                </connections>
-                            </button>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -177,7 +168,7 @@
                     <connections>
                         <outlet property="breadthLabel" destination="2yZ-Kq-lSh" id="anC-Oq-3v4"/>
                         <outlet property="centerPointImageView" destination="XGF-iL-UJI" id="uH1-hq-f4u"/>
-                        <outlet property="distanceLabel" destination="GmK-T9-c3n" id="L2M-3N-O4P"/>
+                        <outlet property="distanceLabel" destination="plg-F7-BBN" id="7Gx-Rs-tmP"/>
                         <outlet property="heightLabel" destination="FxT-Tb-HwJ" id="aWY-Id-EOi"/>
                         <outlet property="lengthLabel" destination="oaM-8G-aF6" id="4xT-7O-eHW"/>
                         <outlet property="sceneView" destination="v6C-CY-qGq" id="Xvq-gK-YxM"/>
@@ -285,6 +276,5 @@
     <resources>
         <image name="Oval" width="12" height="12"/>
         <image name="add_point" width="72.666664123535156" height="73.666664123535156"/>
-        <image name="chevron.right" catalog="system" width="97" height="128"/>
     </resources>
 </document>

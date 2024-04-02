@@ -14,11 +14,7 @@ import Combine
 class AreaViewController: MeasureViewController {
 
     var sharedDims = Dimensions.shared
-    var cancellables: Set<AnyCancellable> = []
     var dimensions: [CGFloat] = [0, 0, 0]
-    
-    let manualView = UIHostingController(rootView: ManualInputView(dimensionsList: Dimensions.shared))
-    @IBOutlet weak var container: UIView!
     
     enum MeasureState {
         case lengthCalc
@@ -48,7 +44,6 @@ class AreaViewController: MeasureViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.delegate = self
-        self.edgesForExtendedLayout = [.top, .bottom]
     }
     
     //MARK: - Private helper methods
@@ -82,11 +77,6 @@ class AreaViewController: MeasureViewController {
         breadthLabel.text = "--"
         heightLabel.text = "--"
         distanceLabel.text = "--"
-    }
-    
-    @IBAction func switchScreen() {
-        print("SwitchScreen Button Pressed")
-        self.navigationController?.pushViewController(manualView, animated: true)
     }
     
     @IBAction func addPoint(_ sender: UIButton) {
@@ -150,17 +140,14 @@ class AreaViewController: MeasureViewController {
             case .lengthCalc:
                 dimensions = [distance, 0, 0]
                 lengthLabel.text = String(format: "%.2fcm", distance)
-                distanceLabel.text = "--"
                 currentState = .breadthCalc
             case .breadthCalc:
                 dimensions[1] = distance
                 breadthLabel.text = String(format: "%.2fcm", distance)
-                distanceLabel.text = "--"
                 currentState = .heightCalc
             case .heightCalc:
                 dimensions[2] = distance
                 heightLabel.text = String(format: "%.2fcm", distance)
-                distanceLabel.text = "--"
                 
                 sharedDims.dimensions.append([String(format: "%.3f", dimensions[0]),
                                     String(format: "%.3f", dimensions[1]),
@@ -188,7 +175,6 @@ extension AreaViewController: ARSCNViewDelegate {
             
             let distance = sceneView.distance(betweenPoints: startNode.position, point2: hitResultPosition) * 100
             let label: UILabel
-            let dlabel: UILabel
             switch currentState {
             case .lengthCalc:
                 label = lengthLabel
@@ -197,10 +183,9 @@ extension AreaViewController: ARSCNViewDelegate {
             case .heightCalc:
                 label = heightLabel
             }
-            dlabel = distanceLabel
             DispatchQueue.main.async { [unowned self] in
                 label.text = String(format: "%.2fcm", distance)
-                dlabel.text = String(format: "%.2fcm", distance)
+                self.distanceLabel.text = String(format: "%.2fcm", distance)
             }
         }
     }
