@@ -79,14 +79,21 @@ struct ManualInputView: View {
                         }
                     }
                     
-                    Button("Add More") {
-                        dimensionsList.dimensions.append(["", "", ""])
-                        print(dimensionsList.dimensions)
+                    Section() {
+                        Button("Add More") {
+                            dimensionsList.dimensions.append(["", "", ""])
+                            print(dimensionsList.dimensions)
+                        }
+                        
+                        NavigationLink(destination: SchematicView(viewModel: viewModel)) {
+                            Text("Finish Adding")
+                        }
                     }
                     
-                    NavigationLink(destination: SchematicView(viewModel: viewModel)) {
-                        Text("Finish Adding")
-                    }
+                    // Add blank space for buttom visiblity
+                    Color(.clear)
+                        .frame(height:300)
+                        .listRowBackground(Color.clear)
                 }
                 .scrollDismissesKeyboard(.immediately)
                 .sheet(isPresented: $showingContainerSelection) {
