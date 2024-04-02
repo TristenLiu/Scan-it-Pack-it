@@ -11,7 +11,7 @@ class ViewModel: ObservableObject {
     @Published var packing_data: PackingData?
 
     func fetch() {
-        guard let url = URL(string: "http://127.0.0.1:5000") else {
+        guard let url = URL(string: "https://scanit-packit-51bb1a0d2371.herokuapp.com/") else {
             return
         }
         
