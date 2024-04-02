@@ -51,7 +51,19 @@ struct ContainerSelectionView: View {
                         Container(name: "", dimensions: ["24", "24", "18"],
                                   imageName: "24x24x18_331748316", category: "FedEx Boxes"),
                         Container(name: "", dimensions: ["18", "13", "11.75"],
-                                  imageName: "18x13x11_75_282911581", category: "FedEx Boxes"),]
+                                  imageName: "18x13x11_75_282911581", category: "FedEx Boxes")],
+        "U-HAUL Trucks": [Container(name: "Pickup Truck", dimensions: ["96", "61", "22"],
+                                    imageName: "uhaul-pickup-SM", category: "U-HAUL Trucks"),
+                          Container(name: "Cargo Van", dimensions: ["114", "67", "56"],
+                                    imageName: "uhaul-cargo-van-SM", category: "U-HAUL Trucks"),
+                          Container(name: "10' Truck", dimensions: ["119", "75", "73"],
+                                    imageName: "10Small", category: "U-HAUL Trucks"),
+                          Container(name: "15' Truck", dimensions: ["180", "92", "86"],
+                                    imageName: "15Small", category: "U-HAUL Trucks"),
+                          Container(name: "20' Truck", dimensions: ["233", "92", "85"],
+                                    imageName: "20small", category: "U-HAUL Trucks"),
+                          Container(name: "26' Truck", dimensions: ["314", "97", "99"],
+                                    imageName: "26Small", category: "U-HAUL Trucks")]
     ]
     
     var body: some View {
