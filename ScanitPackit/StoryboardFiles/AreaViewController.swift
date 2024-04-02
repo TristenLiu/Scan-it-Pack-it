@@ -75,6 +75,8 @@ class AreaViewController: MeasureViewController {
         print("reset button pressed")
         clearScene()
         removeNodes(fromNodeList: lineNodes)
+        realTimeLineNode?.removeFromParentNode()
+        realTimeLineNode = nil
         currentState = .lengthCalc
         lengthLabel.text = "--"
         breadthLabel.text = "--"
@@ -137,7 +139,7 @@ class AreaViewController: MeasureViewController {
             lineNodes.add(measureLine)
             
             //calc distance
-            let distance = sceneView.distance(betweenPoints: startNode.position, point2: endNode.position)
+            let distance = sceneView.distance(betweenPoints: startNode.position, point2: endNode.position) * 100 // M to CM
             
             //Remove realtime line node
             realTimeLineNode?.removeFromParentNode()
@@ -147,17 +149,17 @@ class AreaViewController: MeasureViewController {
             switch currentState {
             case .lengthCalc:
                 dimensions = [distance, 0, 0]
-                lengthLabel.text = String(format: "%.2fm", distance)
+                lengthLabel.text = String(format: "%.2fcm", distance)
                 distanceLabel.text = "--"
                 currentState = .breadthCalc
             case .breadthCalc:
                 dimensions[1] = distance
-                breadthLabel.text = String(format: "%.2fm", distance)
+                breadthLabel.text = String(format: "%.2fcm", distance)
                 distanceLabel.text = "--"
                 currentState = .heightCalc
             case .heightCalc:
                 dimensions[2] = distance
-                heightLabel.text = String(format: "%.2fm", distance)
+                heightLabel.text = String(format: "%.2fcm", distance)
                 distanceLabel.text = "--"
                 
                 sharedDims.dimensions.append([String(format: "%.3f", dimensions[0]),
@@ -184,7 +186,7 @@ extension AreaViewController: ARSCNViewDelegate {
            let startNode = self.nodesList(forState: self.currentState).firstObject as? SCNNode {
             realTimeLineNode.updateNode(vectorA: startNode.position, vectorB: hitResultPosition, color: nil)
             
-            let distance = sceneView.distance(betweenPoints: startNode.position, point2: hitResultPosition)
+            let distance = sceneView.distance(betweenPoints: startNode.position, point2: hitResultPosition) * 100
             let label: UILabel
             let dlabel: UILabel
             switch currentState {
@@ -197,8 +199,8 @@ extension AreaViewController: ARSCNViewDelegate {
             }
             dlabel = distanceLabel
             DispatchQueue.main.async { [unowned self] in
-                label.text = String(format: "%.2fm", distance)
-                dlabel.text = String(format: "%.2fm", distance)
+                label.text = String(format: "%.2fcm", distance)
+                dlabel.text = String(format: "%.2fcm", distance)
             }
         }
     }
