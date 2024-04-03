@@ -13,6 +13,7 @@ struct ManualInputView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var dimensionsList: Dimensions
     @State private var showingContainerSelection = false
+    @State private var SchematicSeen = false
     @StateObject var viewModel = ViewModel()
 
     
@@ -63,6 +64,7 @@ struct ManualInputView: View {
                             } else {
                                 Button(action: {
                                     dimensionsList.removeDimensions(at: index)
+                                    SchematicSeen = false
                                 }) {
                                     Image(systemName: "minus.circle.fill")
                                         .foregroundColor(.red)
@@ -80,14 +82,30 @@ struct ManualInputView: View {
                     }
                     
                     Section() {
-                        Button("Add More") {
+                        Button{
                             dimensionsList.dimensions.append(["", "", ""])
                             print(dimensionsList.dimensions)
+                            SchematicSeen = false
+                        } label: {
+                            Text("Add More")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
                         }
                         
-                        NavigationLink(destination: SchematicView(viewModel: viewModel)) {
-                            Text("Finish Adding")
-                        }
+                        NavigationLink("Finish Adding", destination: SchematicView(viewModel: viewModel)
+                            .onAppear{
+                                if !SchematicSeen {
+                                    print("Finished adding boxes")
+                                    let data = SessionData(
+                                        dimensionsList: dimensionsList.dimensions,
+                                        saveDate: Date(),
+                                        numberOfBoxes: dimensionsList.dimensions.count)
+                                    print(data)
+                                    data.save()
+                                    
+                                    SchematicSeen = true
+                                }
+                        })
                     }
                     
                     // Add blank space for buttom visiblity
@@ -116,3 +134,6 @@ struct ManualInputView: View {
     }
 }
 
+#Preview {
+    ManualInputView(dimensionsList: Dimensions.shared)
+}
