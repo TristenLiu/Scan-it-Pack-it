@@ -12,12 +12,12 @@ struct ContentView: View {
     
     @State private var manualScreen = false
     @ObservedObject var sharedDims = Dimensions.shared
-    @State var selectedTab: Tabs = .saved
+//    @State var selectedTab: Tabs = .saved
     
     var body: some View {
         VStack {
             
-            TabBarView(selectedTab: $selectedTab)
+            TabBarView(/*selectedTab: $selectedTab*/)
         }
     }
 }

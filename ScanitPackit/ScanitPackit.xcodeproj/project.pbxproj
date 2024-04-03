@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B05A88D92BB8FD1200A09280 /* ContainerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05A88D82BB8FD1200A09280 /* ContainerSelectionView.swift */; };
+		B05A88DB2BBCF67E00A09280 /* SessionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05A88DA2BBCF67E00A09280 /* SessionData.swift */; };
+		B05A88DF2BBD006500A09280 /* SessionDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05A88DE2BBD006500A09280 /* SessionDataViewModel.swift */; };
 		B0A9607F2BB26AC800305EC9 /* ScanitPackitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A9607E2BB26AC800305EC9 /* ScanitPackitApp.swift */; };
 		B0A960812BB26AC800305EC9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A960802BB26AC800305EC9 /* ContentView.swift */; };
 		B0A960832BB26AC900305EC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0A960822BB26AC900305EC9 /* Assets.xcassets */; };
@@ -51,6 +53,8 @@
 
 /* Begin PBXFileReference section */
 		B05A88D82BB8FD1200A09280 /* ContainerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerSelectionView.swift; sourceTree = "<group>"; };
+		B05A88DA2BBCF67E00A09280 /* SessionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionData.swift; sourceTree = "<group>"; };
+		B05A88DE2BBD006500A09280 /* SessionDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDataViewModel.swift; sourceTree = "<group>"; };
 		B0A9607B2BB26AC800305EC9 /* ScanitPackit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScanitPackit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0A9607E2BB26AC800305EC9 /* ScanitPackitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanitPackitApp.swift; sourceTree = "<group>"; };
 		B0A960802BB26AC800305EC9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -142,6 +146,8 @@
 				F7BA60012BBCABC800A8CBB0 /* TabBarButton.swift */,
 				F7BA60032BBCABDF00A8CBB0 /* TabBarView.swift */,
 				F7BA60052BBCABFA00A8CBB0 /* NewPackageView.swift */,
+				B05A88DA2BBCF67E00A09280 /* SessionData.swift */,
+				B05A88DE2BBD006500A09280 /* SessionDataViewModel.swift */,
 			);
 			path = ScanitPackit;
 			sourceTree = "<group>";
@@ -326,8 +332,10 @@
 				F7BA5FFE2BBCAB9B00A8CBB0 /* ViewModel.swift in Sources */,
 				B0A960B82BB273F200305EC9 /* MeasureSCNView.swift in Sources */,
 				F7BA60022BBCABC800A8CBB0 /* TabBarButton.swift in Sources */,
+				B05A88DB2BBCF67E00A09280 /* SessionData.swift in Sources */,
 				B0A960F92BB78BD400305EC9 /* Dimensions.swift in Sources */,
 				F7BA60062BBCABFA00A8CBB0 /* NewPackageView.swift in Sources */,
+				B05A88DF2BBD006500A09280 /* SessionDataViewModel.swift in Sources */,
 				B0A960B32BB273F200305EC9 /* MeasureViewController.swift in Sources */,
 				B0A9607F2BB26AC800305EC9 /* ScanitPackitApp.swift in Sources */,
 				B0A960B72BB273F200305EC9 /* LineNode.swift in Sources */,
