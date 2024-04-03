@@ -13,7 +13,7 @@ struct NewPackageView: View {
     @StateObject var viewModel = ViewModel()
     
     var body: some View {
-            
+        NavigationView() {
             VStack () {
                 Spacer()
                 Text("Select Input Mode")
@@ -23,7 +23,7 @@ struct NewPackageView: View {
                 
                 Spacer()
                 
- 
+                
                 NavigationLink(destination: storyboardView().edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
                     VStack (alignment: .leading, spacing: 16.0) {
                         HStack {
@@ -43,7 +43,7 @@ struct NewPackageView: View {
                     .frame(maxWidth: 300)
                 }
                 .padding()
-
+                
                 NavigationLink(destination: ManualInputView(dimensionsList: sharedDims).edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
                     VStack (alignment: .leading, spacing: 16.0) {
                         HStack {
@@ -70,7 +70,8 @@ struct NewPackageView: View {
             }
             
         }
-        //.navigationTitle("Select Input Mode")
+    }
+    //.navigationTitle("Select Input Mode")
 }
 
 #Preview {
