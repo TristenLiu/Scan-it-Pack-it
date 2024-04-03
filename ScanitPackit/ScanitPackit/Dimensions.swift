@@ -11,7 +11,7 @@ import Combine
 class Dimensions: ObservableObject {
     static let shared = Dimensions()
     
-    @Published var dimensions: [[String]] = []
+    @Published var dimensions: [[Float]] = []
     
     func removeDimensions(at index: Int) {
             dimensions.remove(at: index)

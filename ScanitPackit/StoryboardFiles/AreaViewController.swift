@@ -149,9 +149,9 @@ class AreaViewController: MeasureViewController {
                 dimensions[2] = distance
                 heightLabel.text = String(format: "%.2fcm", distance)
                 
-                sharedDims.dimensions.append([String(format: "%.3f", dimensions[0]),
-                                    String(format: "%.3f", dimensions[1]),
-                                    String(format: "%.3f", dimensions[2])])
+                sharedDims.dimensions.append([Float(dimensions[0]),
+                                    Float(dimensions[1]),
+                                    Float(dimensions[2])])
                 print(sharedDims.dimensions)
             }
         }
