@@ -23,6 +23,20 @@ struct SchematicView: View {
             VStack {
                 
                 if let packingData = viewModel.packing_data {
+                    let parsedData = parseData(packingData: packingData)
+   
+                    VStack (alignment: .leading) {
+                        Text("Unfitted Items: \(parsedData.1.joined(separator: ", "))")
+                            .padding(0.5)
+                        
+                        Text("Space Utilization: \(parsedData.7)")
+                            .padding(0.5)
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.5))
+                    .foregroundColor(.white)
+                    .cornerRadius(5)
+                    
                     SceneView(scene: createScene(packingData: packingData), options: [.autoenablesDefaultLighting, .allowsCameraControl])
                         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2, alignment: .center)
                     //.position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
@@ -58,11 +72,7 @@ struct SchematicView: View {
                                 
                             }
                             
-//                            ForEach(unfittedItems, id: \.self) { item in
-//                                Text("These items do not fit: \(item)")
-//                                    .foregroundColor(.red)
-//                                    .padding(.all)
-//                            }
+                            
                         }
                         
                         Button(action: {
@@ -72,10 +82,10 @@ struct SchematicView: View {
                                 addedNodes.append(boxNode)
                                 if let boxName = boxNode.childNodes.first?.name {
                                     boxNames.append(boxName)
-//                                    if viewModel.packing_data?.unfitted_items.contains(where: { $0.partno == boxName }) ?? false {
-//                                        unfittedItems.append(boxName)
-//                                        print(unfittedItems)
-//                                    }
+                                    //                                    if viewModel.packing_data?.unfitted_items.contains(where: { $0.partno == boxName }) ?? false {
+                                    //                                        unfittedItems.append(boxName)
+                                    //                                        print(unfittedItems)
+                                    //                                    }
                                 }
                                 
                                 currentIndex += 1
@@ -145,7 +155,7 @@ struct SchematicView: View {
         }
     }
     
-    func parseData(packingData: PackingData) -> ([Fitted_Items], [String], [UIColor], [[Float]], [[CGFloat]], [String], [Int]) {
+    func parseData(packingData: PackingData) -> ([Fitted_Items], [String], [UIColor], [[Float]], [[CGFloat]], [String], [Int], String) {
         let fittedItems = packingData.fitted_items
         let colors = fittedItems.indices.map { index in
             predefinedColors[index % predefinedColors.count]
@@ -165,7 +175,8 @@ struct SchematicView: View {
         
         let fittedItemsNames = fittedItems.map { $0.partno }
         let rotationSetting = fittedItems.map { $0.rotation_type }
-        return (fittedItems, unfittedItemsNames, colors, fittedItemsPositions, fittedItemsDimensions, fittedItemsNames, rotationSetting)
+        let spaceUtilization = packingData.space_utilization
+        return (fittedItems, unfittedItemsNames, colors, fittedItemsPositions, fittedItemsDimensions, fittedItemsNames, rotationSetting, spaceUtilization)
         
     }
     
