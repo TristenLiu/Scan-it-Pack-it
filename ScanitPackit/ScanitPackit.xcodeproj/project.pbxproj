@@ -10,6 +10,7 @@
 		B05A88D92BB8FD1200A09280 /* ContainerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05A88D82BB8FD1200A09280 /* ContainerSelectionView.swift */; };
 		B05A88DB2BBCF67E00A09280 /* SessionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05A88DA2BBCF67E00A09280 /* SessionData.swift */; };
 		B05A88DF2BBD006500A09280 /* SessionDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05A88DE2BBD006500A09280 /* SessionDataViewModel.swift */; };
+		B0A2A0EB2BBE3B12001D5A35 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A2A0EA2BBE3B12001D5A35 /* SettingsView.swift */; };
 		B0A9607F2BB26AC800305EC9 /* ScanitPackitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A9607E2BB26AC800305EC9 /* ScanitPackitApp.swift */; };
 		B0A960812BB26AC800305EC9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A960802BB26AC800305EC9 /* ContentView.swift */; };
 		B0A960832BB26AC900305EC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0A960822BB26AC900305EC9 /* Assets.xcassets */; };
@@ -55,6 +56,7 @@
 		B05A88D82BB8FD1200A09280 /* ContainerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerSelectionView.swift; sourceTree = "<group>"; };
 		B05A88DA2BBCF67E00A09280 /* SessionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionData.swift; sourceTree = "<group>"; };
 		B05A88DE2BBD006500A09280 /* SessionDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDataViewModel.swift; sourceTree = "<group>"; };
+		B0A2A0EA2BBE3B12001D5A35 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B0A9607B2BB26AC800305EC9 /* ScanitPackit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScanitPackit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0A9607E2BB26AC800305EC9 /* ScanitPackitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanitPackitApp.swift; sourceTree = "<group>"; };
 		B0A960802BB26AC800305EC9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				F7BA60052BBCABFA00A8CBB0 /* NewPackageView.swift */,
 				B05A88DA2BBCF67E00A09280 /* SessionData.swift */,
 				B05A88DE2BBD006500A09280 /* SessionDataViewModel.swift */,
+				B0A2A0EA2BBE3B12001D5A35 /* SettingsView.swift */,
 			);
 			path = ScanitPackit;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				F7BA60042BBCABDF00A8CBB0 /* TabBarView.swift in Sources */,
 				B0A960AB2BB26C5C00305EC9 /* SchematicView.swift in Sources */,
 				B0A960FB2BB7C75E00305EC9 /* ViewState.swift in Sources */,
+				B0A2A0EB2BBE3B12001D5A35 /* SettingsView.swift in Sources */,
 				B0A960B42BB273F200305EC9 /* SCNSphere+Init.swift in Sources */,
 				B0A960B62BB273F200305EC9 /* AreaViewController.swift in Sources */,
 				F7BA5FFE2BBCAB9B00A8CBB0 /* ViewModel.swift in Sources */,
