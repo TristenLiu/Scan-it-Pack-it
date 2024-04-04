@@ -18,14 +18,14 @@ struct ManualInputView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                NavigationLink(destination: storyboardView().edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
-                    HStack {
-                        Text("Scan")
-                    }
-                }
-                .padding()
-            }
+//            HStack {
+//                Spacer()
+//                NavigationLink(destination: storyboardView().edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
+//                    HStack {
+//                        Text("Scan")
+//                    }
+//                }
+//            }
             Text("Manual Input Mode")
                 .font(.title)
                 .frame(alignment: .top)
