@@ -12,7 +12,8 @@ struct SchematicView: View {
     @ObservedObject var viewModel: ViewModel
     @State private var currentIndex = 0
     @State private var addedNodes = [SCNNode]()
-    @State private var boxName: String?
+    @State private var boxNames = [String]()
+    @State private var unfittedItems = [String]()
     
     var scene = SCNScene()
     
@@ -24,9 +25,9 @@ struct SchematicView: View {
                 if let packingData = viewModel.packing_data {
                     SceneView(scene: createScene(packingData: packingData), options: [.autoenablesDefaultLighting, .allowsCameraControl])
                         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2, alignment: .center)
-                        //.position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+                    //.position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
                         .padding()
-                                     
+                    
                     HStack {
                         Button(action: {
                             if currentIndex > 0 {
@@ -35,6 +36,7 @@ struct SchematicView: View {
                                 if addedNodes.isEmpty == false {
                                     addedNodes.last?.removeFromParentNode()
                                     addedNodes.removeLast()
+                                    boxNames.removeLast()
                                 }
                                 
                             }
@@ -48,13 +50,19 @@ struct SchematicView: View {
                             if currentIndex == 0 {
                                 Text("Begin Packing Tutorial")
                             } else {
-                                if let boxName = boxName { // Use boxNodeName if it's not nil
+                                if let boxName = addedNodes.last?.childNodes.first?.name {
                                     Text("Item: \(boxName)")
                                         .foregroundColor(.primary)
                                         .padding(.all)
                                 }
-                               
+                                
                             }
+                            
+//                            ForEach(unfittedItems, id: \.self) { item in
+//                                Text("These items do not fit: \(item)")
+//                                    .foregroundColor(.red)
+//                                    .padding(.all)
+//                            }
                         }
                         
                         Button(action: {
@@ -62,7 +70,14 @@ struct SchematicView: View {
                                 let boxNode = createBoxes(packingData: packingData, index: currentIndex)
                                 scene.rootNode.addChildNode(boxNode)
                                 addedNodes.append(boxNode)
-                                boxName = boxNode.childNodes.first?.name
+                                if let boxName = boxNode.childNodes.first?.name {
+                                    boxNames.append(boxName)
+//                                    if viewModel.packing_data?.unfitted_items.contains(where: { $0.partno == boxName }) ?? false {
+//                                        unfittedItems.append(boxName)
+//                                        print(unfittedItems)
+//                                    }
+                                }
+                                
                                 currentIndex += 1
                             }
                         }) {
@@ -74,6 +89,7 @@ struct SchematicView: View {
                 } else {
                     Text("Packing Data Not Available")
                 }
+                
             }
             
         }
@@ -82,16 +98,16 @@ struct SchematicView: View {
     
     
     // CUSTOM Metal Shader - Generate the wireframe texture
-        let sm = "float u = _surface.diffuseTexcoord.x; \n" +
-        "float v = _surface.diffuseTexcoord.y; \n" +
-        "int u100 = int(u * 100); \n" +
-        "int v100 = int(v * 100); \n" +
-        "if (u100 % 99 == 0 || v100 % 99 == 0) { \n" +
-        "  // do nothing \n" +
-        "} else { \n" +
-        "    discard_fragment(); \n" +
-        "} \n"
-
+    let sm = "float u = _surface.diffuseTexcoord.x; \n" +
+    "float v = _surface.diffuseTexcoord.y; \n" +
+    "int u100 = int(u * 100); \n" +
+    "int v100 = int(v * 100); \n" +
+    "if (u100 % 99 == 0 || v100 % 99 == 0) { \n" +
+    "  // do nothing \n" +
+    "} else { \n" +
+    "    discard_fragment(); \n" +
+    "} \n"
+    
     let predefinedColors: [UIColor] = [
         UIColor.systemYellow,
         UIColor.systemPink,
@@ -129,7 +145,7 @@ struct SchematicView: View {
         }
     }
     
-    func parseData(packingData: PackingData) -> ([Fitted_Items], [String], [UIColor], [[Float]], [[CGFloat]], [String]) {
+    func parseData(packingData: PackingData) -> ([Fitted_Items], [String], [UIColor], [[Float]], [[CGFloat]], [String], [Int]) {
         let fittedItems = packingData.fitted_items
         let colors = fittedItems.indices.map { index in
             predefinedColors[index % predefinedColors.count]
@@ -148,15 +164,15 @@ struct SchematicView: View {
         }
         
         let fittedItemsNames = fittedItems.map { $0.partno }
-        
-        return (fittedItems, unfittedItemsNames, colors, fittedItemsPositions, fittedItemsDimensions, fittedItemsNames)
+        let rotationSetting = fittedItems.map { $0.rotation_type }
+        return (fittedItems, unfittedItemsNames, colors, fittedItemsPositions, fittedItemsDimensions, fittedItemsNames, rotationSetting)
         
     }
     
-
+    
     func createScene(packingData: PackingData) -> SCNScene {
         let bin = extractDimensionsAndConvert(from: packingData.bin)
-
+        
         let container = SCNBox(width: bin[0], height: bin[1], length: bin[2], chamferRadius: 0)
         container.firstMaterial?.diffuse.contents = UIColor.black
         container.firstMaterial?.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
@@ -166,24 +182,48 @@ struct SchematicView: View {
         containerNode.position = SCNVector3(0 + Float(bin[0] / 2), 0 + Float(bin[1] / 2), 0 + Float(bin[2] / 2))
         scene.rootNode.addChildNode(containerNode)
         
-        let cameraNode = SCNNode()
-        cameraNode.camera = SCNCamera()
-        
-        cameraNode.position = SCNVector3(x: 10, y: 10, z: 50)
-        scene.rootNode.addChildNode(cameraNode)
         return scene
     }
-
+    
     func createBoxes(packingData: PackingData, index: Int) -> SCNNode {
         let packing_data = parseData(packingData: packingData)
         let size = packing_data.4[index]
         let position = packing_data.3[index]
         let color = packing_data.2[index]
         let name = packing_data.5[index]
+        let rotation = packing_data.6[index]
         
         let parentNode = SCNNode()
-
-        let box = SCNBox(width: size[0], height: size[1], length: size[2], chamferRadius: 0.0)
+        let fadeInAction = SCNAction.fadeIn(duration: 1)
+        
+        let box: SCNBox
+        var rotatedSize: [CGFloat]
+        
+        if rotation == 0 {
+            box = SCNBox(width: size[0], height: size[1], length: size[2], chamferRadius: 0.0)
+            rotatedSize = [size[0], size[1], size[2]]
+            
+        } else if rotation == 1 {
+            box = SCNBox(width: size[1], height: size[0], length: size[2], chamferRadius: 0.0)
+            rotatedSize = [size[1], size[0], size[2]]
+        } else if rotation == 2 {
+            box = SCNBox(width: size[1], height: size[2], length: size[0], chamferRadius: 0.0)
+            rotatedSize = [size[1], size[2], size[0]]
+        } else if rotation == 3 {
+            box = SCNBox(width: size[2], height: size[1], length: size[0], chamferRadius: 0.0)
+            rotatedSize = [size[2], size[1], size[0]]
+        } else if rotation == 4 {
+            box = SCNBox(width: size[2], height: size[0], length: size[1], chamferRadius: 0.0)
+            rotatedSize = [size[2], size[0], size[1]]
+        } else if rotation == 5 {
+            box = SCNBox(width: size[0], height: size[2], length: size[1], chamferRadius: 0.0)
+            rotatedSize = [size[0], size[2], size[1]]
+        } else {
+            print("Invalid rotation")
+            box = SCNBox(width: 0, height: 0, length: 0, chamferRadius: 0.0)
+            rotatedSize = [0, 0, 0]
+        }
+        
         let material = SCNMaterial()
         material.diffuse.contents = color
         material.transparency = 0.7
@@ -191,13 +231,12 @@ struct SchematicView: View {
         
         let boxNode = SCNNode(geometry: box)
         boxNode.name = name
+        boxNode.opacity = 0.0
         
-        let fadeInAction = SCNAction.fadeIn(duration: 1)
-        let moveAction = SCNAction.move(to: SCNVector3(position[0] + Float(size[0] / 2), position[1] + Float(size[1] / 2), position[2] + Float(size[2] / 2)), duration: 0.5)
-        
+        let moveAction = SCNAction.move(to: SCNVector3(position[0] + Float(rotatedSize[0] / 2), position[1] + Float(rotatedSize[1] / 2), position[2] + Float(rotatedSize[2] / 2)), duration: 0.5)
         let fadeInMoveSequence = SCNAction.sequence([SCNAction.wait(duration: Double(index - currentIndex) * 1.0), fadeInAction, moveAction])
         
-        boxNode.opacity = 0.0 // Initially hide new nodes
+        boxNode.opacity = 0.0
         boxNode.runAction(fadeInMoveSequence)
         
         parentNode.addChildNode(boxNode)
