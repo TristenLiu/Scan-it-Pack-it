@@ -58,6 +58,17 @@ class AreaViewController: MeasureViewController {
         }
     }
     
+    private func getLabel(forState state: MeasureState) -> UILabel {
+        switch state {
+        case .lengthCalc:
+            return lengthLabel
+        case .breadthCalc:
+            return breadthLabel
+        case .heightCalc:
+            return heightLabel
+        }
+    }
+    
     func clearScene() {
         removeNodes(fromNodeList: nodesList(forState: .lengthCalc))
         removeNodes(fromNodeList: nodesList(forState: .breadthCalc))
@@ -76,6 +87,14 @@ class AreaViewController: MeasureViewController {
         lengthLabel.text = "--"
         breadthLabel.text = "--"
         heightLabel.text = "--"
+        distanceLabel.text = "--"
+    }
+    
+    @IBAction func resetCurrentMeasurement() {
+        removeNodes(fromNodeList: nodesList(forState: currentState))
+        realTimeLineNode?.removeFromParentNode()
+        realTimeLineNode = nil
+        getLabel(forState: currentState).text = "--"
         distanceLabel.text = "--"
     }
     
