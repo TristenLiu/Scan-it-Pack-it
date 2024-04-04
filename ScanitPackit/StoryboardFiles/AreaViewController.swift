@@ -150,6 +150,10 @@ class AreaViewController: MeasureViewController {
             //calc distance
             let distance = sceneView.distance(betweenPoints: startNode.position, point2: endNode.position) * 100 // M to CM
             
+            let displayDistance = sharedDims.measurementUnit == .cm ? distance : distance/2.54
+            let format = sharedDims.measurementUnit == .cm ? "%.2fcm" : "%.2fin"
+            
+            
             //Remove realtime line node
             realTimeLineNode?.removeFromParentNode()
             realTimeLineNode = nil
@@ -158,15 +162,15 @@ class AreaViewController: MeasureViewController {
             switch currentState {
             case .lengthCalc:
                 dimensions = [distance, 0, 0]
-                lengthLabel.text = String(format: "%.2fcm", distance)
+                lengthLabel.text = String(format: format, displayDistance)
                 currentState = .breadthCalc
             case .breadthCalc:
                 dimensions[1] = distance
-                breadthLabel.text = String(format: "%.2fcm", distance)
+                breadthLabel.text = String(format: format, displayDistance)
                 currentState = .heightCalc
             case .heightCalc:
                 dimensions[2] = distance
-                heightLabel.text = String(format: "%.2fcm", distance)
+                heightLabel.text = String(format: format, displayDistance)
                 
                 sharedDims.dimensions.append([Float(dimensions[0]),
                                     Float(dimensions[1]),
@@ -192,7 +196,10 @@ extension AreaViewController: ARSCNViewDelegate {
            let startNode = self.nodesList(forState: self.currentState).firstObject as? SCNNode {
             realTimeLineNode.updateNode(vectorA: startNode.position, vectorB: hitResultPosition, color: nil)
             
-            let distance = sceneView.distance(betweenPoints: startNode.position, point2: hitResultPosition) * 100
+            var distance = sceneView.distance(betweenPoints: startNode.position, point2: hitResultPosition) * 100
+            distance = sharedDims.measurementUnit == .cm ? distance : distance/2.54
+            let format = sharedDims.measurementUnit == .cm ? "%.2fcm" : "%.2fin"
+
             let label: UILabel
             switch currentState {
             case .lengthCalc:
@@ -203,8 +210,8 @@ extension AreaViewController: ARSCNViewDelegate {
                 label = heightLabel
             }
             DispatchQueue.main.async { [unowned self] in
-                label.text = String(format: "%.2fcm", distance)
-                self.distanceLabel.text = String(format: "%.2fcm", distance)
+                label.text = String(format: format, distance)
+                self.distanceLabel.text = String(format: format, distance)
             }
         }
     }
