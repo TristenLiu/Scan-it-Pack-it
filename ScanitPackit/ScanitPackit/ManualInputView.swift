@@ -58,10 +58,10 @@ struct ManualInputView: View {
                         TextField("Length (\(dimensionsList.measurementUnit.rawValue))",
                                   text: self.binding(for: index, dimensionIndex: 0))
                             .keyboardType(.decimalPad)
-                        TextField("Length (\(dimensionsList.measurementUnit.rawValue))",
+                        TextField("Width (\(dimensionsList.measurementUnit.rawValue))",
                                   text: self.binding(for: index, dimensionIndex: 1))
                             .keyboardType(.decimalPad)
-                        TextField("Length (\(dimensionsList.measurementUnit.rawValue))",
+                        TextField("Height (\(dimensionsList.measurementUnit.rawValue))",
                                   text: self.binding(for: index, dimensionIndex: 2))
                             .keyboardType(.decimalPad)
                     }
@@ -122,10 +122,17 @@ struct ManualInputView: View {
     private func binding(for index: Int, dimensionIndex: Int) -> Binding<String> {
         Binding<String>(
             get: {
+                // make sure [index][dimensionIndex] exists
+                guard self.dimensionsList.dimensions.indices.contains(index),
+                      self.dimensionsList.dimensions[index].indices.contains(dimensionIndex) else {
+                    return ""
+                }
                 // when getting, convert to CM or IN based on current unit
                 let dimension = self.dimensionsList.dimensions[index][dimensionIndex]
-                return self.convertDimensions(dimension, 
-                                              to: self.dimensionsList.measurementUnit)
+                let displayText = self.convertDimensions(dimension,
+                                                        to: self.dimensionsList.measurementUnit)
+                // if the dimension is empty, return an empty string
+                return displayText == "0.00" ? "" : displayText
             },
             set: {
                 // when setting, convert to cm for dimensionsList
