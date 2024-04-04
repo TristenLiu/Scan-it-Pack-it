@@ -164,7 +164,7 @@ struct BoxSessionsListView: View {
                 }
                 .onDelete(perform: delete)
             }
-            .navigationBarTitle("Saved Box Sessions")
+            .navigationBarTitle("Session History")
             .alert(item: $deleteSession) { session in
                 Alert(
                     title: Text("Confirm Delete"),
