@@ -13,7 +13,7 @@ struct NewPackageView: View {
     @StateObject var viewModel = ViewModel()
     
     var body: some View {
-        NavigationView() {
+//        NavigationView() {
             VStack () {
                 Spacer()
                 Text("Select Input Mode")
@@ -44,7 +44,7 @@ struct NewPackageView: View {
                 }
                 .padding()
                 
-                NavigationLink(destination: ManualInputView(dimensionsList: sharedDims).edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)) {
+                NavigationLink(destination: ManualInputView(dimensionsList: sharedDims)) {
                     VStack (alignment: .leading, spacing: 16.0) {
                         HStack {
                             Image(systemName: "square.and.pencil")
@@ -70,7 +70,7 @@ struct NewPackageView: View {
             }
             
         }
-    }
+//    }
     //.navigationTitle("Select Input Mode")
 }
 
