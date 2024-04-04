@@ -27,8 +27,8 @@ enum RoundingOption: Double, CaseIterable, Identifiable {
 }
 
 enum MeasurementUnit: String, CaseIterable, Identifiable {
-    case inches = "Inches"
-    case cm = "CM"
+    case inches = "in"
+    case cm = "cm"
     
     var id: String { self.rawValue }
 }
@@ -36,13 +36,46 @@ enum MeasurementUnit: String, CaseIterable, Identifiable {
 class Dimensions: ObservableObject {
     static let shared = Dimensions()
     
-    @Published var dimensions: [[Float]] = []
-    @Published var selectedRoundingOption: RoundingOption = .none
+    @Published var dimensions: [[Float]] = [] {
+        didSet {
+//            roundDimensions()
+        }
+    }
+    @Published var selectedRoundingOption: RoundingOption = .none {
+        didSet {
+//            roundDimensions()
+        }
+    }
     @Published var measurementUnit: MeasurementUnit = .cm
     
     func removeDimensions(at index: Int) {
-            dimensions.remove(at: index)
+        dimensions.remove(at: index)
+    }
+    
+    private func roundDimensions() {
+        dimensions = dimensions.map { dimensionSet in
+            dimensionSet.map { dimension in
+                roundDimension(dimension, roundingOption: selectedRoundingOption)
+            }
         }
+    }
+    
+    private func roundDimension(_ dimension: Float, roundingOption: RoundingOption) -> Float {
+        switch roundingOption {
+        case .none:
+            return dimension
+        case .quarter, .half, .one:
+            // convert to inches if unit is in inches
+            let dimensionInTargetUnit: Float = self.measurementUnit == .inches ? dimension / 2.54 : dimension
+            let roundingInterval = roundingOption.rawValue
+            let roundedValue = round(Double(dimensionInTargetUnit) / roundingInterval) * roundingInterval
+            
+            // convert back to cm for data storage if unit is in inches
+            let roundedDimension: Float = self.measurementUnit == .inches ? Float(roundedValue) * 2.54 : Float(roundedValue)
+
+            return Float(roundedValue)
+        }
+    }
     
     func convertDimensions(_ dimensions: [Float]) -> [Float] {
         switch measurementUnit {
