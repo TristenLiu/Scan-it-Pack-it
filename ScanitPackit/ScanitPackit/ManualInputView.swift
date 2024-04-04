@@ -16,7 +16,6 @@ struct ManualInputView: View {
     @State private var fetchCompleted = false
     @StateObject var viewModel = ViewModel()
     
-    
     var body: some View {
         VStack {
             HStack {
@@ -56,11 +55,14 @@ struct ManualInputView: View {
                             .padding(.trailing, 8)
                         }
                     }) {
-                        TextField("Length (cm)", value: $dimensionsList.dimensions[index][0], formatter: NumberFormatter())
+                        TextField("Length (\(dimensionsList.measurementUnit.rawValue))",
+                                  text: self.binding(for: index, dimensionIndex: 0))
                             .keyboardType(.decimalPad)
-                        TextField("Width (cm)", value: $dimensionsList.dimensions[index][1], formatter: NumberFormatter())
+                        TextField("Length (\(dimensionsList.measurementUnit.rawValue))",
+                                  text: self.binding(for: index, dimensionIndex: 1))
                             .keyboardType(.decimalPad)
-                        TextField("Height (cm)", value: $dimensionsList.dimensions[index][2], formatter: NumberFormatter())
+                        TextField("Length (\(dimensionsList.measurementUnit.rawValue))",
+                                  text: self.binding(for: index, dimensionIndex: 2))
                             .keyboardType(.decimalPad)
                     }
                 }
@@ -72,11 +74,18 @@ struct ManualInputView: View {
                     }
                     
                     Button("Finish Adding") {
+                        let data = SessionData(
+                            dimensionsList: dimensionsList.dimensions,
+                            saveDate: Date(),
+                            numberOfBoxes: dimensionsList.dimensions.count)
+                        print(data)
+                        data.save()
                         viewModel.fetch(with: dimensionsList)
                         fetchCompleted = true
                     }
                     
                     NavigationLink(destination: SchematicView(viewModel: viewModel), isActive: $fetchCompleted) {
+                        EmptyView()
                     }
                 }
                 
@@ -98,5 +107,40 @@ struct ManualInputView: View {
         }
         .padding()
         //}
+    }
+    
+    private func convertDimensions(_ dimension: Float, to unit: MeasurementUnit) -> String {
+        switch unit {
+        case .inches:
+            return String(format: "%.2f", dimension / 2.54)
+        case .cm:
+            return String(format: "%.2f", dimension)
+        }
+    }
+    
+    // Create a binding for each dimension TextField
+    private func binding(for index: Int, dimensionIndex: Int) -> Binding<String> {
+        Binding<String>(
+            get: {
+                // when getting, convert to CM or IN based on current unit
+                let dimension = self.dimensionsList.dimensions[index][dimensionIndex]
+                return self.convertDimensions(dimension, 
+                                              to: self.dimensionsList.measurementUnit)
+            },
+            set: {
+                // when setting, convert to cm for dimensionsList
+                if let floatValue = Float($0) {
+                    let storedValue: Float
+                    if self.dimensionsList.measurementUnit == .inches {
+                        // if curent unit is in inches, convert to cm
+                        storedValue = floatValue * 2.54
+                    } else {
+                        storedValue = floatValue
+                    }
+                    // update value
+                    self.dimensionsList.dimensions[index][dimensionIndex] = storedValue
+                }
+            }
+        )
     }
 }
