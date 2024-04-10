@@ -9,12 +9,14 @@ import Foundation
 
 struct SessionData: Codable, Identifiable {
     let id: UUID
-    let dimensionsList: [[Float]]
+    let containerDims: [[Float]]
+    let boxDims: [[Float]]
     let saveDate: Date
     let numberOfBoxes: Int
     
-    init(dimensionsList: [[Float]], saveDate: Date, numberOfBoxes: Int, id: UUID = UUID()) {
-            self.dimensionsList = dimensionsList
+    init(containerDims: [[Float]], boxDims: [[Float]], saveDate: Date, numberOfBoxes: Int, id: UUID = UUID()) {
+            self.containerDims = containerDims
+            self.boxDims = boxDims
             self.saveDate = saveDate
             self.numberOfBoxes = numberOfBoxes
             self.id = id

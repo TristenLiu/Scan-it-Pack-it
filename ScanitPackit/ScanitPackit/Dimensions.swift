@@ -36,7 +36,8 @@ enum MeasurementUnit: String, CaseIterable, Identifiable {
 class Dimensions: ObservableObject {
     static let shared = Dimensions()
     
-    @Published var dimensions: [[Float]] = [] {
+    @Published var containerDims: [[Float]] = [[0,0,0]]
+    @Published var boxDims: [[Float]] = [] {
         didSet {
 //            roundDimensions()
         }
@@ -48,34 +49,42 @@ class Dimensions: ObservableObject {
     }
     @Published var measurementUnit: MeasurementUnit = .cm
     
-    func removeDimensions(at index: Int) {
-        dimensions.remove(at: index)
+    var containerCount: Int {
+        return containerDims.count
     }
     
-    private func roundDimensions() {
-        dimensions = dimensions.map { dimensionSet in
-            dimensionSet.map { dimension in
-                roundDimension(dimension, roundingOption: selectedRoundingOption)
-            }
-        }
+    func removeCDims(at index: Int) {
+        containerDims.remove(at: index)
     }
     
-    private func roundDimension(_ dimension: Float, roundingOption: RoundingOption) -> Float {
-        switch roundingOption {
-        case .none:
-            return dimension
-        case .quarter, .half, .one:
-            // convert to inches if unit is in inches
-            let dimensionInTargetUnit: Float = self.measurementUnit == .inches ? dimension / 2.54 : dimension
-            let roundingInterval = roundingOption.rawValue
-            let roundedValue = round(Double(dimensionInTargetUnit) / roundingInterval) * roundingInterval
-            
-            // convert back to cm for data storage if unit is in inches
-            let roundedDimension: Float = self.measurementUnit == .inches ? Float(roundedValue) * 2.54 : Float(roundedValue)
-
-            return Float(roundedValue)
-        }
+    func removeBDims(at index: Int) {
+        boxDims.remove(at: index)
     }
+    
+//    private func roundDimensions() {
+//        boxDims = boxDims.map { dimensionSet in
+//            boxDims.map { dimension in
+//                roundDimension(dimension, roundingOption: selectedRoundingOption)
+//            }
+//        }
+//    }
+    
+//    private func roundDimension(_ dimension: Float, roundingOption: RoundingOption) -> Float {
+//        switch roundingOption {
+//        case .none:
+//            return dimension
+//        case .quarter, .half, .one:
+//            // convert to inches if unit is in inches
+//            let dimensionInTargetUnit: Float = self.measurementUnit == .inches ? dimension / 2.54 : dimension
+//            let roundingInterval = roundingOption.rawValue
+//            let roundedValue = round(Double(dimensionInTargetUnit) / roundingInterval) * roundingInterval
+//            
+//            // convert back to cm for data storage if unit is in inches
+//            let roundedDimension: Float = self.measurementUnit == .inches ? Float(roundedValue) * 2.54 : Float(roundedValue)
+//
+//            return Float(roundedValue)
+//        }
+//    }
     
     func convertDimensions(_ dimensions: [Float]) -> [Float] {
         switch measurementUnit {

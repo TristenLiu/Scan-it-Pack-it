@@ -172,10 +172,17 @@ class AreaViewController: MeasureViewController {
                 dimensions[2] = distance
                 heightLabel.text = String(format: format, displayDistance)
                 
-                sharedDims.dimensions.append([Float(dimensions[0]),
-                                    Float(dimensions[1]),
-                                    Float(dimensions[2])])
-                print(sharedDims.dimensions)
+                if sharedDims.containerDims.last == [0,0,0] {
+                    sharedDims.containerDims.append([Float(dimensions[0]),
+                                                      Float(dimensions[1]),
+                                                      Float(dimensions[2])])
+                } else {
+                    sharedDims.boxDims.append([Float(dimensions[0]),
+                                               Float(dimensions[1]),
+                                               Float(dimensions[2])])
+                }
+                print("Containers: \(sharedDims.containerDims) ")
+                print("Boxes: \(sharedDims.boxDims)")
             }
         }
     }

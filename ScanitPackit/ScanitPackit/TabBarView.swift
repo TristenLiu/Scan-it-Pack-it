@@ -144,7 +144,8 @@ struct BoxSessionsListView: View {
             List {
                 ForEach(Array(viewModel.SessionDataList.enumerated()), id: \.element.saveDate) { index, session in
                     Button(action: {
-                        dimensionsList.dimensions = session.dimensionsList
+                        dimensionsList.containerDims = session.containerDims
+                        dimensionsList.boxDims = session.boxDims
                         selectedTab = 1
                     }) {
                         HStack {
