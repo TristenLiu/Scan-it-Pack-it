@@ -40,16 +40,7 @@ struct ManualInputView: View {
                              "Container \(index + 1)"
                              : "Box \(index - dimensionsList.containerCount + 1)")
                         Spacer()
-                        if index == 0 {
-                            Button(action: {
-                                selectIndex = 0
-                                showingContainerSelection = true
-                            }) {
-                                Image(systemName: "square.grid.2x2")
-                                    .foregroundColor(.blue)
-                            }
-                            .padding(.trailing, 8)
-                        } else if index < dimensionsList.containerCount {
+                        if index < dimensionsList.containerCount {
                             Button(action: {
                                 selectIndex = index
                                 showingContainerSelection = true
