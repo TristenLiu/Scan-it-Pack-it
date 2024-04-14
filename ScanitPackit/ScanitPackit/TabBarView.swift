@@ -189,9 +189,17 @@ struct BoxSessionsListView: View {
 }
 
 struct UsageView: View {
+    @ObservedObject var viewModel = UsageViewModel()
+    
     var body: some View {
-        VStack {
-            Text("Temporary Usage Instructions")
+        List {
+            ForEach(viewModel.sections, id: \.title) { section in
+                DisclosureGroup(section.title) {
+                    ForEach(section.instructions, id: \.self) { instruction in
+                        Text(instruction)
+                    }
+                }
+            }
         }
     }
 }
