@@ -35,11 +35,13 @@ class AreaViewController: MeasureViewController {
     }
     var nodeColor = UIColor.white.withAlphaComponent(0.8)
     
+    var CB = true
     
     @IBOutlet weak var heightLabel: UILabel!
     @IBOutlet weak var breadthLabel: UILabel!
     @IBOutlet weak var lengthLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var CBControl: UISegmentedControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +79,14 @@ class AreaViewController: MeasureViewController {
     }
     
     //MARK: - IBActions
+    @IBAction func CBChanged(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            CB = true
+        } else {
+            CB = false
+        }
+    }
+    
     @IBAction func resetMeasurement() {
         print("reset button pressed")
         clearScene()
@@ -172,14 +182,14 @@ class AreaViewController: MeasureViewController {
                 dimensions[2] = distance
                 heightLabel.text = String(format: format, displayDistance)
                 
-                if sharedDims.containerDims.last == [0,0,0] {
-                    sharedDims.containerDims.append([Float(dimensions[0]),
-                                                      Float(dimensions[1]),
-                                                      Float(dimensions[2])])
+                if CB {
+                    if sharedDims.containerDims.last == [0,0,0] {
+                        sharedDims.containerDims[sharedDims.containerCount - 1] = dimensions.map{Float($0)}
+                    } else {
+                        sharedDims.containerDims.append(dimensions.map{Float($0)})
+                    }
                 } else {
-                    sharedDims.boxDims.append([Float(dimensions[0]),
-                                               Float(dimensions[1]),
-                                               Float(dimensions[2])])
+                    sharedDims.boxDims.append(dimensions.map{Float($0)})
                 }
                 print("Containers: \(sharedDims.containerDims) ")
                 print("Boxes: \(sharedDims.boxDims)")
