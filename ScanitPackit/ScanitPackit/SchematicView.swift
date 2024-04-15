@@ -167,13 +167,13 @@ struct SchematicView: View {
     
     let predefinedColors: [UIColor] = [
         UIColor.systemYellow,
-        UIColor.systemPink,
+        UIColor.systemIndigo,
         UIColor.systemBrown,
         UIColor.systemCyan,
         UIColor.systemPurple,
         UIColor.systemMint,
         UIColor.systemTeal,
-        UIColor.systemRed,
+        UIColor.systemGreen,
         UIColor.systemBlue,
         UIColor.systemOrange
     ]
@@ -238,19 +238,24 @@ struct SchematicView: View {
         let containerMaterials = [
             UIColor.black,   // Front
             UIColor.black,   // Back
-            UIColor.black,   // Right
-            UIColor.blue,   // Left
+            UIColor.red,   // Right
+            UIColor.black,   // Left
             UIColor.black,    // Top
-            UIColor.black    // Bottom
-        ].map { color in
+            UIColor.black   // Bottom
+        ].enumerated().map { (index, color) in
             let material = SCNMaterial()
             material.diffuse.contents = color
-            material.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
             material.isDoubleSided = true
-                        
+        
+            if index != 2 {
+                material.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
+            } else {
+                material.transparency = 0.2
+            }
+            
             return material
         }
-        
+                        
         container.materials = containerMaterials
         
         let containerNode = SCNNode(geometry: container)
