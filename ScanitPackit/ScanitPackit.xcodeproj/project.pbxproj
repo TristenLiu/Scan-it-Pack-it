@@ -136,6 +136,7 @@
 		B0A9607D2BB26AC800305EC9 /* ScanitPackit */ = {
 			isa = PBXGroup;
 			children = (
+				F7BA5FFD2BBCAB9B00A8CBB0 /* ViewModel.swift */,
 				B0A960F12BB27CF000305EC9 /* Info.plist */,
 				B0A9607E2BB26AC800305EC9 /* ScanitPackitApp.swift */,
 				B0A960A82BB26C2F00305EC9 /* ManualInputView.swift */,
@@ -162,7 +163,6 @@
 			isa = PBXGroup;
 			children = (
 				B0A960852BB26AC900305EC9 /* Preview Assets.xcassets */,
-				F7BA5FFD2BBCAB9B00A8CBB0 /* ViewModel.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -523,6 +523,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -555,6 +556,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
