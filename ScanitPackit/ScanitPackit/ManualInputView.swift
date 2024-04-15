@@ -96,8 +96,8 @@ struct ManualInputView: View {
                             numberOfBoxes: dimensionsList.containerCount + dimensionsList.boxDims.count)
                         print(data)
                         data.save()
-                                                viewModel.fetch(with: dimensionsList)
-                                                fetchCompleted = true
+                        viewModel.fetch(with: dimensionsList)
+                        fetchCompleted = true
                         
                         print("Containers: \(dimensionsList.containerDims)")
                         print("Boxes: \(dimensionsList.boxDims)")
