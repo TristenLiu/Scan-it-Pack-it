@@ -41,7 +41,7 @@ class UsageViewModel: ObservableObject {
                                     "4) Toggle between Multiple Containers using the bottom right and left arrows",
                                    "---Notes---",
                                     "Boxes unable to be fit the provided container will be written on top of the screen",
-                                    "The default view of the packing schematic is Top-Down. The left side of the container is outlined in blue color."]),
+                                    "The default view of the packing schematic is Top-Down. The bottom side of the container is colored red."]),
         UsageSection(title: "History",
                      instructions: ["1) Select the 'Saved' tab from the home page",
                                     "2) To load a session's data, press on the session",
