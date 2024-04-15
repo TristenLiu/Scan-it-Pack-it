@@ -8,7 +8,7 @@
 import Foundation
 
 class ViewModel: ObservableObject {
-    @Published var packing_data: PackingData?
+    @Published var packing_data: [PackingData]?
 
     func fetch(with dimensionsList: Dimensions) {
         guard let url = URL(string: "https://scanit-packit-51bb1a0d2371.herokuapp.com/") else {
@@ -18,7 +18,7 @@ class ViewModel: ObservableObject {
         var jsonItems: [[String: Any]] = []
         
         // Create JSON items from dimensionsList
-        for (index, dimensions) in dimensionsList.dimensions.dropFirst().enumerated() {
+        for (index, dimensions) in dimensionsList.boxDims.enumerated() {
             
             let item: [String: Any] = [
                 "partno": "\(index + 1)",
@@ -35,17 +35,27 @@ class ViewModel: ObservableObject {
             jsonItems.append(item)
         }
         
+        // Create JSON containers
+        var jsonContainers: [[String: Any]] = []
+        for (index, dimensions) in dimensionsList.containerDims.enumerated() {
+            let container: [String: Any] = [
+                "bin": "Container \(index + 1)",
+                "bin_name": "Container \(index + 1)",
+                "width": dimensions[0], // Assuming width is at index 0
+                "height": dimensions[1], // Assuming height is at index 1
+                "depth": dimensions[2] // Assuming depth is at index 2
+            ]
+            jsonContainers.append(container)
+        }
+        
         let jsonObject: [String: Any] = [
-            "bin_dimensions": [
-                "width": dimensionsList.dimensions[0][0], // Assuming width is at index 0
-                "height": dimensionsList.dimensions[0][1], // Assuming height is at index 1
-                "depth": dimensionsList.dimensions[0][2] // Assuming depth is at index 2
-            ],
+            "bins": jsonContainers,
             "items": jsonItems
         ]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+            //print(jsonObject)
             
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -60,7 +70,7 @@ class ViewModel: ObservableObject {
                 }
                 
                 do {
-                    let packing_data = try JSONDecoder().decode(PackingData.self, from: data)
+                    let packing_data = try JSONDecoder().decode([PackingData].self, from: data)
                     DispatchQueue.main.async {
                         self?.packing_data = packing_data
                         print(packing_data)

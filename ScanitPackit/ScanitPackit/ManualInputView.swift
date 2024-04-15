@@ -14,7 +14,7 @@ struct ManualInputView: View {
     @ObservedObject var dimensionsList: Dimensions
     @State private var showingContainerSelection = false
     @State private var fetchCompleted = false
-//    @StateObject var viewModel = ViewModel()
+    @StateObject var viewModel = ViewModel()
     @State private var selectIndex = 0
     
     var body: some View {
@@ -96,16 +96,16 @@ struct ManualInputView: View {
                             numberOfBoxes: dimensionsList.containerCount + dimensionsList.boxDims.count)
                         print(data)
                         data.save()
-                        //                        viewModel.fetch(with: dimensionsList)
-                        //                        fetchCompleted = true
+                                                viewModel.fetch(with: dimensionsList)
+                                                fetchCompleted = true
                         
                         print("Containers: \(dimensionsList.containerDims)")
                         print("Boxes: \(dimensionsList.boxDims)")
                     }
                     
-//                    NavigationLink(destination: SchematicView(viewModel: viewModel), isActive: $fetchCompleted) {
-//                        EmptyView()
-//                    }
+                    NavigationLink(destination: SchematicView(viewModel: viewModel), isActive: $fetchCompleted) {
+                        EmptyView()
+                    }
                 }
                 
                 Color(.clear)

@@ -14,8 +14,10 @@ struct SchematicView: View {
     @State private var addedNodes = [SCNNode]()
     @State private var boxNames = [String]()
     @State private var unfittedItems = [String]()
+    @State private var currentContainerIndex = 0
+    @State private var addedContainer = [SCNNode]()
     
-    var scene = SCNScene()
+    @State private var scene = SCNScene()
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -23,8 +25,12 @@ struct SchematicView: View {
             VStack {
                 
                 if let packingData = viewModel.packing_data {
-                    let parsedData = parseData(packingData: packingData)
-   
+                    let parsedData = parseData(packingData: packingData[currentContainerIndex])
+                    
+                    Text("\(parsedData.8)")
+                        .font(.headline)
+                        .padding()
+                    
                     VStack (alignment: .leading) {
                         Text("Unfitted Items: \(parsedData.1.joined(separator: ", "))")
                             .padding(0.5)
@@ -37,7 +43,7 @@ struct SchematicView: View {
                     .foregroundColor(.white)
                     .cornerRadius(5)
                     
-                    SceneView(scene: createScene(packingData: packingData), options: [.autoenablesDefaultLighting, .allowsCameraControl])
+                    SceneView(scene: createScene(packingData: packingData[currentContainerIndex]), options: [.autoenablesDefaultLighting, .allowsCameraControl])
                         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2, alignment: .center)
                     //.position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
                         .padding()
@@ -76,16 +82,12 @@ struct SchematicView: View {
                         }
                         
                         Button(action: {
-                            if currentIndex < viewModel.packing_data?.fitted_items.count ?? 0 {
-                                let boxNode = createBoxes(packingData: packingData, index: currentIndex)
+                            if currentIndex < viewModel.packing_data?[currentContainerIndex].fitted_items.count ?? 0 {
+                                let boxNode = createBoxes(packingData: packingData[currentContainerIndex], index: currentIndex)
                                 scene.rootNode.addChildNode(boxNode)
                                 addedNodes.append(boxNode)
                                 if let boxName = boxNode.childNodes.first?.name {
                                     boxNames.append(boxName)
-                                    //                                    if viewModel.packing_data?.unfitted_items.contains(where: { $0.partno == boxName }) ?? false {
-                                    //                                        unfittedItems.append(boxName)
-                                    //                                        print(unfittedItems)
-                                    //                                    }
                                 }
                                 
                                 currentIndex += 1
@@ -93,15 +95,60 @@ struct SchematicView: View {
                         }) {
                             Image(systemName:"arrow.forward")
                         }
-                        .disabled(currentIndex == (viewModel.packing_data?.fitted_items.count ?? 0))
+                        .disabled(currentIndex == (viewModel.packing_data?[currentContainerIndex].fitted_items.count ?? 0))
                     }
                     .padding()
+                    
+                    HStack {
+                        Button(action: {
+                            if currentContainerIndex > 0 {
+                                currentContainerIndex -= 1
+                            }
+                        }) {
+                            Image(systemName: "arrow.backward")
+                        }
+                        .disabled(currentContainerIndex == 0)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            if currentContainerIndex < packingData.count - 1 {
+                                scene = createScene(packingData: packingData[currentContainerIndex])
+                                currentContainerIndex += 1
+                            }
+                        }) {
+                            Image(systemName: "arrow.forward")
+                        }
+                        .disabled(currentContainerIndex == packingData.count - 1)
+                    }
+                    .padding()
+                    
                 } else {
                     Text("Packing Data Not Available")
                 }
                 
             }
             
+        }
+        .onChange(of: currentContainerIndex) { newValue in
+            // Remove all nodes from the scene
+            for node in addedNodes {
+                node.removeFromParentNode()
+            }
+            
+            scene.rootNode.enumerateChildNodes { (node, _) in
+                if node.name == "containerNode" {
+                    node.removeFromParentNode()
+                }
+            }
+            addedNodes.removeAll()
+            boxNames.removeAll()
+            currentIndex = 0
+            
+            // Update the scene with the new container data
+            if let packingData = viewModel.packing_data {
+                scene = createScene(packingData: packingData[newValue])
+            }
         }
         
     }
@@ -155,7 +202,7 @@ struct SchematicView: View {
         }
     }
     
-    func parseData(packingData: PackingData) -> ([Fitted_Items], [String], [UIColor], [[Float]], [[CGFloat]], [String], [Int], String) {
+    func parseData(packingData: PackingData) -> ([Fitted_Items], [String], [UIColor], [[Float]], [[CGFloat]], [String], [Int], String, String) {
         let fittedItems = packingData.fitted_items
         let colors = fittedItems.indices.map { index in
             predefinedColors[index % predefinedColors.count]
@@ -176,7 +223,8 @@ struct SchematicView: View {
         let fittedItemsNames = fittedItems.map { $0.partno }
         let rotationSetting = fittedItems.map { $0.rotation_type }
         let spaceUtilization = packingData.space_utilization
-        return (fittedItems, unfittedItemsNames, colors, fittedItemsPositions, fittedItemsDimensions, fittedItemsNames, rotationSetting, spaceUtilization)
+        let containerName = packingData.bin_name
+        return (fittedItems, unfittedItemsNames, colors, fittedItemsPositions, fittedItemsDimensions, fittedItemsNames, rotationSetting, spaceUtilization, containerName)
         
     }
     
@@ -186,10 +234,27 @@ struct SchematicView: View {
         
         let container = SCNBox(width: bin[0], height: bin[1], length: bin[2], chamferRadius: 0)
         container.firstMaterial?.diffuse.contents = UIColor.black
-        container.firstMaterial?.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
-        container.firstMaterial?.isDoubleSided = true
+        
+        let containerMaterials = [
+            UIColor.black,   // Front
+            UIColor.black,   // Back
+            UIColor.black,   // Right
+            UIColor.blue,   // Left
+            UIColor.black,    // Top
+            UIColor.black    // Bottom
+        ].map { color in
+            let material = SCNMaterial()
+            material.diffuse.contents = color
+            material.shaderModifiers = [SCNShaderModifierEntryPoint.surface: sm]
+            material.isDoubleSided = true
+                        
+            return material
+        }
+        
+        container.materials = containerMaterials
         
         let containerNode = SCNNode(geometry: container)
+        containerNode.name = "containerNode"
         containerNode.position = SCNVector3(0 + Float(bin[0] / 2), 0 + Float(bin[1] / 2), 0 + Float(bin[2] / 2))
         scene.rootNode.addChildNode(containerNode)
         

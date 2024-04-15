@@ -9,6 +9,7 @@ import Foundation
 
 struct PackingData: Hashable, Decodable {
     let bin: String
+    let bin_name: String
     let fitted_items: [Fitted_Items]
     let residual_volume: Double
     let space_utilization: String
@@ -23,14 +24,14 @@ struct Fitted_Items: Hashable, Decodable {
     let partno: String
     let position: [String]
     let rotation_type: Int
-    let volume: String
+    let volume: Double
     let weight: String
 }
 
 struct Unfitted_Items: Hashable, Decodable {
     let dimensions: [String]
     let partno: String
-    let volume: String
+    let volume: Double
     let weight: String
 }
 
