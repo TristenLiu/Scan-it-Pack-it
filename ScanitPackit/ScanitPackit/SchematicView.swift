@@ -17,10 +17,6 @@ struct SchematicView: View {
     @State private var currentContainerIndex = 0
     @State private var addedContainer = [SCNNode]()
     @State private var cameraNode = SCNNode()
-    @State private var pointOfViewOriginalTransform = SCNMatrix4Identity
-    @State private var pointOfViewOriginalPosition = SCNVector3Zero
-    @State private var fieldOfViewOriginal: CGFloat = 0.0
-    
     @State private var scene = SCNScene()
     
     var body: some View {
@@ -69,7 +65,7 @@ struct SchematicView: View {
                         Text("Unfitted Items: \(parsedData.1.joined(separator: ", "))")
                             .padding(0.5)
                         
-                        Text("Space Utilization: \(parsedData.7)")
+                        Text("Space Utilization: \(parsedData.7)%")
                             .padding(0.5)
                     }
                     .padding()
@@ -77,15 +73,15 @@ struct SchematicView: View {
                     .foregroundColor(.white)
                     .cornerRadius(5)
                     
-                    //                    Button(action: {
-                    //                        resetView()
-                    //                    }) {
-                    //                        Text("Reset View")
-                    //                    }
-                    //                    .padding()
-                    //                    .foregroundColor(Color.white)
-                    //                    .background(Color.red)
-                    //                    .cornerRadius(10)
+//                    Button(action: {
+//                        resetView()
+//                    }) {
+//                        Text("Reset View")
+//                    }
+//                    .padding()
+//                    .foregroundColor(Color.white)
+//                    .background(Color.red)
+//                    .cornerRadius(10)
                     
                     
                     SceneView(scene: createScene(packingData: packingData[currentContainerIndex]), options: [.autoenablesDefaultLighting, .allowsCameraControl])
@@ -204,9 +200,10 @@ struct SchematicView: View {
         UIColor.systemOrange
     ]
     
-    func resetView() {
-        
-    }
+//    func resetView() {
+//        cameraNode.camera = SCNCamera()
+//        cameraNode.position =
+//    }
     
     func extractDimensionsAndConvert(from text: String) -> [CGFloat] {
         let pattern = "(\\d+)x(\\d+)x(\\d+)"
