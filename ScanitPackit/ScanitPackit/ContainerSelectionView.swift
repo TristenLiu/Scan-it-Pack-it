@@ -73,6 +73,7 @@ struct ContainerSelectionView: View {
                     ForEach(containerData[key] ?? []) { container in
                         Button(action: {
                             selectContainer(container)
+                            presentationMode.wrappedValue.dismiss()
                         }) {
                             ContainerRow(container: container)
                         }
