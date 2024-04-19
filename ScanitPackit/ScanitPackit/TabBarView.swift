@@ -22,7 +22,7 @@ struct TabBarView: View {
     var body: some View {
         NavigationView {
             TabView(selection: $selectedTab) {
-                BoxSessionsListView(selectedTab: $selectedTab, dimensionsList: Dimensions.shared)
+                SessionDataView(selectedTab: $selectedTab, dimensionsList: Dimensions.shared)
                     .tabItem {
                         TabBarButton(buttonText: "Saved",
                                      imageName: "folder",
@@ -133,11 +133,12 @@ struct TabBarView: View {
     }
 }
 
-struct BoxSessionsListView: View {
+struct SessionDataView: View {
     @Binding var selectedTab: Int
     @ObservedObject var dimensionsList: Dimensions
     @ObservedObject var viewModel = SessionDataViewModel()
     @State private var deleteSession: SessionData?
+    @State private var showingClearAllConfirm = false
     
     var body: some View {
         NavigationView {
@@ -153,31 +154,26 @@ struct BoxSessionsListView: View {
                                 Text("Date: \(session.saveDate, formatter: dateFormatter)")
                                 Text("Number of Boxes: \(session.numberOfBoxes)")
                             }
-                            Spacer()
-                            Button(action: {
-                                self.deleteSession = session
-                            }) {
-                                Image(systemName: "trash")
-                                    .foregroundColor(.red)
-                            }
                         }
                     }
                 }
                 .onDelete(perform: delete)
             }
             .navigationBarTitle("Session History")
-            .alert(item: $deleteSession) { session in
-                Alert(
-                    title: Text("Confirm Delete"),
-                    message: Text("Are you sure you want to delete this session?"),
-                    primaryButton: .destructive(Text("Delete")) {
-                        if let index = viewModel.SessionDataList.firstIndex(where: { $0.id == session.id }) {
-                            viewModel.deleteSession(at: index)
-                        }
-                    },
-                    secondaryButton: .cancel()
-                )
+            .navigationBarItems(trailing: Button("Clear All") {
+                showingClearAllConfirm = true
+                print("button pressed")
             }
+                .alert(isPresented: $showingClearAllConfirm) {
+                    Alert(
+                        title: Text("Confirm Clear All"),
+                        message: Text("Are you sure you want to delete all sessions? This action cannot be undone."),
+                        primaryButton: .destructive(Text("Delete All")) {
+                            viewModel.deleteAllSessions()
+                        },
+                        secondaryButton: .cancel()
+                    )
+                })
         }
     }
     

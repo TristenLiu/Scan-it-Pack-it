@@ -11,11 +11,11 @@ import Combine
 
 class SessionDataViewModel: ObservableObject {
     @Published var SessionDataList: [SessionData] = []
-
+    
     init() {
         loadSavedSessions()
     }
-
+    
     private func loadSavedSessions() {
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         do {
@@ -37,17 +37,37 @@ class SessionDataViewModel: ObservableObject {
     }
     
     func deleteSession(at index: Int) {
-            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let session = SessionDataList[index]
-            
-            let fileURL = documentsDirectory.appendingPathComponent("SessionData-\(session.id.uuidString).json")
-
-            do {
-                try FileManager.default.removeItem(at: fileURL)
-                SessionDataList.remove(at: index)
-                print("Removed session")
-            } catch {
-                print("Failed to delete session: \(error)")
-            }
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let session = SessionDataList[index]
+        
+        let fileURL = documentsDirectory.appendingPathComponent("SessionData-\(session.id.uuidString).json")
+        
+        do {
+            try FileManager.default.removeItem(at: fileURL)
+            SessionDataList.remove(at: index)
+            print("Removed session")
+        } catch {
+            print("Failed to delete session: \(error)")
         }
+    }
+    
+    func deleteAllSessions() {
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        do {
+            // get file urls by file name
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
+            let sessionFiles = fileURLs.filter { $0.lastPathComponent.starts(with: "SessionData-") }
+            
+            // delete all files found
+            for fileURL in sessionFiles {
+                try FileManager.default.removeItem(at: fileURL)
+            }
+            
+            // clear current session data list
+            SessionDataList.removeAll()
+            print("All sessions removed")
+        } catch {
+            print("Failed to delete all sessions: \(error)")
+        }
+    }
 }

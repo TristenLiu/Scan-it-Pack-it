@@ -15,7 +15,12 @@ struct UsageSection {
 
 class UsageViewModel: ObservableObject {
     @Published var sections: [UsageSection] = [
-        UsageSection(title: "Scanning", 
+        UsageSection(title: "App Overview",
+                     instructions: ["Welcome to Scan it Pack it!",
+                                    "This application was created during the 2023-2024 school year as an ECE Senior Design Project, requested by Benyamin Trachtenberg (btt@bu.edu) and developed by Tristen Liu (tristenl@bu.edu), Daniellia Sumigar (dsumigar@bu.edu), Juan Vecino (jvecino@bu.edu) and Ramy Attie (attiera@bu.edu).",
+                                   "The purpose of this application is to be able to determine the optimal schematic to pack a variable number of boxes into a variable number of containers, based on the automatic determination of the dimensions of each object.",
+                                   "Our implementation of this goal involves using the LiDAR scanner in iPhones in order to determine the lengths of the three sides of a box, calling a Cloud Computing backend in order to calculate the optimal packing schematic and then displaying that schematic on the screen."]),
+        UsageSection(title: "Scanning",
                      instructions: ["1) Press the (+) button on one point of the length of the box select the starting point",
                                     "2) Press the (+) on the other endpoint on the same length of the box to finish the edge measurement",
                                     "3) Repeat steps 1&2 two more times on the width and the height of the box",
@@ -45,7 +50,7 @@ class UsageViewModel: ObservableObject {
         UsageSection(title: "History",
                      instructions: ["1) Select the 'Saved' tab from the home page",
                                     "2) To load a session's data, press on the session",
-                                    "3) To delete a session's data, press on the trash button or swipe left",
+                                    "3) To delete a session's data, swipe left",
                                     "---Notes---",
                                     "A session's data is always saved when 'Finish Adding' is pressed"]),
         UsageSection(title: "Settings",
