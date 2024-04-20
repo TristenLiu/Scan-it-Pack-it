@@ -17,14 +17,12 @@ struct SettingsView: View {
                     Form {
                         Section(header: Text("Settings").font(.largeTitle)) {
                             VStack {
-                                Text("Rounding Options")
-                                Picker("Rounding", selection: $sharedDims.selectedRoundingOption) {
-                                    ForEach(RoundingOption.allCases) { option in
-                                        Text(option.description).tag(option)
-                                    }
+                                HStack {
+                                    Text("Priority Packing")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Toggle("", isOn: $sharedDims.priorityToggle)
+                                        .labelsHidden()
                                 }
-                                .pickerStyle(SegmentedPickerStyle())
-                                
                                 Spacer()
                                 Text("Measurement Units")
                                 Picker("Measurement Unit", selection:$sharedDims.measurementUnit) {
