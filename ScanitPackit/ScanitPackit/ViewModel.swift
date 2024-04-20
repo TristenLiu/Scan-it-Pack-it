@@ -19,20 +19,38 @@ class ViewModel: ObservableObject {
         
         // Create JSON items from dimensionsList
         for (index, dimensions) in dimensionsList.boxDims.enumerated() {
+            // priority toggled on = pack according to order
+            if (dimensionsList.priorityToggle) {
+                let item: [String: Any] = [
+                    "partno": "\(index + 1)",
+                    "name": "Item \(index + 1)",
+                    "typeof": "cube",
+                    "width": dimensions[0],
+                    "height": dimensions[1],
+                    "depth": dimensions[2],
+                    "weight": 1,
+                    "level": index,
+                    "loadbear": 100,
+                    "updown": true
+                ]
+                jsonItems.append(item)
+            } else {
+            // priority toggled off = default packing mode
+                let item: [String: Any] = [
+                    "partno": "\(index + 1)",
+                    "name": "Item \(index + 1)",
+                    "typeof": "cube",
+                    "width": dimensions[0],
+                    "height": dimensions[1],
+                    "depth": dimensions[2],
+                    "weight": 1,
+                    "level": 1,
+                    "loadbear": 100,
+                    "updown": true
+                ]
+                jsonItems.append(item)
+            }
             
-            let item: [String: Any] = [
-                "partno": "\(index + 1)",
-                "name": "Item \(index + 1)",
-                "typeof": "cube",
-                "width": dimensions[0],
-                "height": dimensions[1],
-                "depth": dimensions[2],
-                "weight": 1,
-                "level": 1,
-                "loadbear": 100,
-                "updown": true
-            ]
-            jsonItems.append(item)
         }
         
         // Create JSON containers
