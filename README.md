@@ -1,7 +1,7 @@
 # Scan It! Pack It!
 
 ## Project Description
-This project, developed for the EC464 Capstone Senior Design Project at Boston University's Electrical & Computer Engineering department, is designed to address sustainability in packaging. Under the guidance of Benni Trachtenberg, "Scan It! Pack It!" utilizes advanced technologies such as LiDAR, cloud computing, and machine learning to optimize packaging processes, ensuring efficient resource usage and enhanced goods safety during transit.
+This project, developed for the EC464 Capstone Senior Design Project at Boston University's Electrical & Computer Engineering department, is designed to address sustainability in packaging. Under the guidance of Benni Trachtenberg, "Scan It! Pack It!" utilizes advanced technologies such as LiDAR, cloud computing, and machine learning to optimize packaging processes and ensuring efficient resource usage.
 
 ## Table of Contents
 1. [Installation Instructions](#installation-instructions)
