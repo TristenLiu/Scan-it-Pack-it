@@ -35,4 +35,14 @@ struct Unfitted_Items: Hashable, Decodable {
     let weight: String
 }
 
+struct MinimumContainerData: Hashable, Decodable {
+    let min_container: Minimum_Container
+    let total_items_volume: Double
+}
+
+struct Minimum_Container: Hashable, Decodable {
+    let name: String
+    let imageName: String
+    let volume: Double
+}
 

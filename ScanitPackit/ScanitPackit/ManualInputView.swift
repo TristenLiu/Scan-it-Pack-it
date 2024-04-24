@@ -109,6 +109,17 @@ struct ManualInputView: View {
                     NavigationLink(destination: SchematicView(viewModel: viewModel), isActive: $fetchCompleted) {
                         EmptyView()
                     }
+                    
+                    Button("Suggest a Container") {
+                        let data = SessionData(
+                            containerDims: dimensionsList.containerDims,
+                            boxDims: dimensionsList.boxDims,
+                            saveDate: Date(),
+                            numberOfBoxes: dimensionsList.containerCount + dimensionsList.boxDims.count)
+//                        print(data)
+                        data.save()
+                        viewModel.findMinimumContainerSize(with: dimensionsList)
+                    }
                 }
                 
                 Color(.clear)

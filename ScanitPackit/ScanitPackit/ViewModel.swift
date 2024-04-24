@@ -9,9 +9,10 @@ import Foundation
 
 class ViewModel: ObservableObject {
     @Published var packing_data: [PackingData]?
+    @Published var minimum_container: MinimumContainerData?
 
     func fetch(with dimensionsList: Dimensions) {
-        guard let url = URL(string: "https://scanit-packit-51bb1a0d2371.herokuapp.com/") else {
+        guard let url = URL(string: "https://scanit-packit-51bb1a0d2371.herokuapp.com/packing/") else {
             return
         }
         
@@ -104,5 +105,68 @@ class ViewModel: ObservableObject {
         } catch {
             print("Failed to serialize JSON:", error)
         }
+    }
+    
+    func findMinimumContainerSize(with dimensionsList: Dimensions) {
+        guard let url = URL(string: "https://scanit-packit-51bb1a0d2371.herokuapp.com/find_minimum_container/") else {
+            return
+        }
+        
+        var jsonItems: [[String: Any]] = []
+        
+        for (index, dimensions) in dimensionsList.boxDims.enumerated() {
+            let item: [String: Any] = [
+                "partno": "\(index + 1)",
+                "name": "Item \(index + 1)",
+                "typeof": "cube",
+                "width": dimensions[0],
+                "height": dimensions[1],
+                "depth": dimensions[2],
+                "weight": 1,
+                "level": index,
+                "loadbear": 100,
+                "updown": true
+            ]
+            jsonItems.append(item)
+            
+            let jsonObject: [String: Any] = [
+                "items": jsonItems
+            ]
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+                //print(jsonObject)
+                
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.httpBody = jsonData
+                
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                
+                let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
+                    guard let data = data, error == nil else {
+                        print(error?.localizedDescription ?? "Unknown error")
+                        return
+                    }
+                    
+                    do {
+                        let minimum_container = try JSONDecoder().decode(MinimumContainerData.self, from: data)
+                        DispatchQueue.main.async {
+                            self?.minimum_container = minimum_container
+                            print(minimum_container)
+                        }
+                        
+                    } catch {
+                        print("Failed to decode JSON:", error)
+                    }
+                }
+                
+                // Start API call
+                task.resume()
+            } catch {
+                print("Failed to serialize JSON:", error)
+            }
+        }
+        
     }
 }
