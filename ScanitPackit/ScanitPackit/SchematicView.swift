@@ -206,23 +206,41 @@ struct SchematicView: View {
 //    }
     
     func extractDimensionsAndConvert(from text: String) -> [CGFloat] {
-        let pattern = "(\\d+)x(\\d+)x(\\d+)"
+        let pattern = "(\\d+(\\.\\d+)?)x(\\d+(\\.\\d+)?)x(\\d+(\\.\\d+)?)"
         do {
             let regex = try NSRegularExpression(pattern: pattern)
             let results = regex.matches(in: text,
                                         range: NSRange(text.startIndex..., in: text))
-            return results.flatMap { result -> [CGFloat] in
-                var dimensions = [CGFloat]()
-                for i in 1..<result.numberOfRanges {
-                    if let range = Range(result.range(at: i), in: text),
-                       let floatValue = Float(text[range]) {
-                        dimensions.append(CGFloat(floatValue))
-                    } else {
-                        dimensions.append(0)
-                    }
-                }
-                return dimensions
+            
+            guard let result = results.first else {
+                print("No matches found.")
+                return []
             }
+            
+            var dimensions = [CGFloat]()
+            // Iterate only over the full matches for each dimension, which are captured at indices 1, 3, and 5.
+            let indices = [1, 3, 5]  // Adjusted to skip the sub-group captures for decimal parts.
+            for index in indices {
+                if let range = Range(result.range(at: index), in: text),
+                   let floatValue = Float(text[range]) {
+                    dimensions.append(CGFloat(floatValue))
+                } else {
+                    dimensions.append(0)  // Fallback to zero if conversion fails
+                }
+            }
+            return dimensions
+//            return results.flatMap { result -> [CGFloat] in
+//                var dimensions = [CGFloat]()
+//                for i in 1..<result.numberOfRanges {
+//                    if let range = Range(result.range(at: i), in: text),
+//                       let floatValue = Float(text[range]) {
+//                        dimensions.append(CGFloat(floatValue))
+//                    } else {
+//                        dimensions.append(0)
+//                    }
+//                }
+//                return dimensions
+//            }
         } catch let error {
             print("invalid regex: \(error.localizedDescription)")
             return []
@@ -258,6 +276,8 @@ struct SchematicView: View {
     
     func createScene(packingData: PackingData) -> SCNScene {
         let bin = extractDimensionsAndConvert(from: packingData.bin)
+        print(packingData.bin)
+        print(bin)
         
         let container = SCNBox(width: bin[0], height: bin[1], length: bin[2], chamferRadius: 0)
         container.firstMaterial?.diffuse.contents = UIColor.black
