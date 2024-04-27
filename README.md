@@ -1,6 +1,4 @@
-<div style="text-align: center;">
-   ![logo](https://github.com/TristenLiu/Scan-it-Pack-it/images/logo.png)
-</div>
+# ![logo](https://github.com/TristenLiu/Scan-it-Pack-it/blob/main/logo.png)
 
 
 ## Project Description
