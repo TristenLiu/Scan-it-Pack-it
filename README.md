@@ -2,7 +2,7 @@
 
 
 ## Project Description
-This project, developed for the EC464 Capstone Senior Design Project at Boston University's Electrical & Computer Engineering department 2024, is designed to address sustainability in packaging. Under the guidance of Bennyamin Trachtenberg, "Scan It! Pack It!" utilizes advanced technologies such as LiDAR, cloud computing, and machine learning to optimize packaging processes and ensuring efficient resource usage. This project was developed by Tristen Liu, Daniellia Sumigar, Juan Vecino and Ramy Attie.
+This project, developed for the EC464 Capstone Senior Design Project at Boston University's Electrical & Computer Engineering department 2024, is designed to address sustainability in packaging. Under the guidance of Benyamin Trachtenberg, "Scan It! Pack It!" utilizes advanced technologies such as LiDAR, cloud computing, and machine learning to optimize packaging processes and ensuring efficient resource usage. This project was developed by Tristen Liu, Daniellia Sumigar, Juan Vecino and Ramy Attie.
 
 ## Table of Contents
 1. [Installation Instructions](#installation-instructions)
