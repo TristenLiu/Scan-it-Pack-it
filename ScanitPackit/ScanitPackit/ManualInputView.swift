@@ -110,16 +110,16 @@ struct ManualInputView: View {
                         EmptyView()
                     }
                     
-                    Button("Suggest a Container") {
-                        let data = SessionData(
-                            containerDims: dimensionsList.containerDims,
-                            boxDims: dimensionsList.boxDims,
-                            saveDate: Date(),
-                            numberOfBoxes: dimensionsList.containerCount + dimensionsList.boxDims.count)
-//                        print(data)
-                        data.save()
-                        viewModel.findMinimumContainerSize(with: dimensionsList)
-                    }
+//                    Button("Suggest a Container") {
+//                        let data = SessionData(
+//                            containerDims: dimensionsList.containerDims,
+//                            boxDims: dimensionsList.boxDims,
+//                            saveDate: Date(),
+//                            numberOfBoxes: dimensionsList.containerCount + dimensionsList.boxDims.count)
+////                        print(data)
+//                        data.save()
+//                        viewModel.findMinimumContainerSize(with: dimensionsList)
+//                    }
                 }
                 
                 Color(.clear)
