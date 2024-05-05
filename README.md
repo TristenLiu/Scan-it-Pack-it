@@ -91,6 +91,7 @@ To any future team that may pick up this project - Good Luck :)
 ## References
 - [Measure](https://github.com/adithyabhat/Measure), modified to be Scanning.
 - [Packing Algorithm](https://github.com/jerry800416/3D-bin-packing)
+- [Packing API](https://github.com/juanvecino/scanit_packit_heroku)
 
 ## Contacts
 - Tristen Liu (tristenl@bu.edu)
