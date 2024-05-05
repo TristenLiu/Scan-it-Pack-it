@@ -15,8 +15,23 @@ The manual portion of this application is built with SwiftUI rather than UIKit. 
 For each TextField in Containers and Boxes, there is a corresponding Binding function with get and set methods. The get method is utilized in order to display the values from `Dimensions` into the TextFields, as well as differentiate between a display value and a value of 0. If the Dimension has a value then the value will be displayed in the field, otherwise the corresponding text "Length/Width/Height (unit)" will be displayed depending on the field position and display unit. The set method is utilized whenever a user changes a value in a TextField. Based on the display unit (inches or centimeters), the user input value will need to be converted to centimeters before being saved to the `dimensionsList` variable. 
 
 ### Packing API
+The Packing API call can be found in the `ViewModel` file. Here, the input data from `dimensionsList` from the Manual Input screen is parsed into JSON format and sent in as the JSON body for a POST HTTP request. The specified URL is the Heroku server that is located in a separate GitHub, which may be found in the README references section. The API will return an output JSON that is decoded into `packing_data` and is of type `PackingData`. All of the necessary API model structures corresponding to the output JSON body structure are defined in `Models`.
 
 ### Schematics
+The Packing Schematic is generated using SceneKit and constructs the output schematic based on the packing coordinates returned from the Packing API. Once `packing_data` is queried from the API, the `ViewModel` object is loaded into `SchematicView` as an `ObservableObject`. 
+
+The schematic code has a couple private `@State` variables which may be accessed globally within `SchematicView`. The most important are: 
+ * `scene` defines the container holding all nodes to produce the 3D scene
+ * `currentIndex` which tracks the count of all boxes within the container
+ * `currentContainerIndex` which tracks the count of all containers for the Multiple Containers Feature
+   
+In order to extract the output JSON data, `ViewModel.packingData` is parsed via two methods: `extractDimensionsAndConvert` and `parseData`. The first will extract the dimensions of the container from the `bin_name` value of the JSON. The second method will extract the `fittedItems`, `unfittedItemsNames`, `colors`, `fittedItemsPositions`, `fittedItemsDimensions`, `fittedItemsNames`, `rotationSetting`, `spaceUtilization`, `containerName`. 
+
+The container is initialized in `createScene` using the bin dimension data extracted from the `extractDimensionsAndConvert` method. Here, a custom material defined in `sm` is applied to all six faces of the container. Additionally, other container material modifiers may be found here to customize the appearance of the box. The container geometry is then added to the main `scene` displayed to the user.
+
+The addition of the objects is handled in the `createBoxes` method which is called whenever the user pressed the forward button in the schematic. These boxes are constructed using the data returned by the `parseData` method. The rotation configuration of each box is also handled here which directly changes the order of the dimensions. Moreover, the color of each box is generated randomly using the `predefinedColors` struct. Finally, this method includes the custom animations of objects gradually entering the scene. All boxes are added as `boxNode` which are child nodes of `scene`.
+
+The deletion of boxes and containers when the user presses the backward button is handled on the `.onChange` modifier for the main `view` struct.
 
 ### Settings
 Two settings are provided for the user. 
