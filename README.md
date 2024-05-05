@@ -11,7 +11,7 @@ This project, developed for the EC464 Capstone Senior Design Project at Boston U
 
 ## Installation Instructions
 
-**Prerequisites:**
+**Hardware Prerequisites:**
 - MacOS with Xcode 15 iOS development framework installed.
 - iPhone/iPad 12+ Pro with LiDAR capability.
 
